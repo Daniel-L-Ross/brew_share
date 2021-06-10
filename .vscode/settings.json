@@ -1,0 +1,14 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "db",
+            "database": "db.sqlite3"
+        }
+    ],
+    "python.pythonPath": "/Users/danielross/.local/share/virtualenvs/brew_share_server-zmecZSDN/bin/python",
+    "python.linting.pylintEnabled": true,
+    "python.linting.pylintArgs": [
+        "--django-settings-module=brew_share.settings",
+}
