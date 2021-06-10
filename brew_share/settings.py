@@ -15,6 +15,10 @@ import environ
 env = environ.Env()
 environ.Env.read_env()
 
+MEDIA_ROOT = 'media'
+MEDIA_URL = '/media/'
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
