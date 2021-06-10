@@ -1,7 +1,7 @@
 from django.db import models
 
 class Coffee(models.Model):
-    user = models.ForeignKey('User', on_delete=models.DO_NOTHING)
+    user = models.ForeignKey('Brewer', on_delete=models.DO_NOTHING)
     coffee_image = models.ImageField(
         upload_to='coffee_pics/%Y/%m/%d', height_field=None,
         width_field=None, max_length=None, null=True)

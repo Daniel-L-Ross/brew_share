@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Entry(models.Model):
-    user = models.ForeignKey('User', on_delete=models.)
+    user = models.ForeignKey('User', on_delete=models.CASCADE)
     coffee = models.ForeignKey("Coffee", on_delete=models.DO_NOTHING)
     method = models.ForeignKey("BrewMethod", on_delete=models.DO_NOTHING)
     grind_size = models.CharField(max_length=25)
@@ -17,6 +17,7 @@ class Entry(models.Model):
     private = models.BooleanField()
     block = models.BooleanField()
     recipe = models.BooleanField()
+    recommend = models.BooleanField()
     
     class Meta:
         verbose_name_plural = 'entries'
