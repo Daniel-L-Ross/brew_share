@@ -1,6 +1,7 @@
 """View module for handling request about entries"""
 import datetime
 from django.core.exceptions import ValidationError
+from django.template.response import ContentNotRenderedError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import serializers
@@ -15,14 +16,18 @@ class EntrySerializer(serializers.ModelSerializer):
         model = Entry
         fields = ('id', 'title', 'date', 'user',
                     'coffee', 'grind_size', 'method', 'rating',
-                    'tasting_notes', 'review', 'setup', 'water_temp'
+                    'tasting_notes', 'review', 'setup', 'water_temp',
                     'water_volume', 'recipe', 'recommend', )
 
-class Entries(ViewSet):
+class EntryView(ViewSet):
     """Request handlers for Entries on the brew_share app"""
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def create(self, request):
+        """Handle POST operations
+        Returns:
+            Response -- JSON serialized entry instance
+        """
         new_entry = Entry()
         new_entry.user = Brewer.objects.get(user=request.auth.user)
         new_entry.coffee = Coffee.objects.get(pk=request.data["coffee"])
@@ -37,8 +42,9 @@ class Entries(ViewSet):
         new_entry.water_temp = request.data["waterTemp"]
         new_entry.water_volume = request.data["waterVolume"]
         new_entry.private = request.data["private"]
-        new_entry.recipe = request.data["recipe"]
-        new_entry.recommend = request.data["recommend"]
+        new_entry.block = False
+        new_entry.recipe = False
+        new_entry.recommend = False
         
         try:
             new_entry.clean_fields()
@@ -53,4 +59,16 @@ class Entries(ViewSet):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-    def list
+    def list(self, request):
+        """Handle GET operations
+        Returns:
+            Response -- JSON serialized list of entries
+        """
+        user = request.auth.user
+
+        entries = Entry.objects.all().filter(private=False).filter(block=False)
+
+        serializer = EntrySerializer(
+            entries, many=True, context={'request': request}
+        )
+        return Response(serializer.data)
