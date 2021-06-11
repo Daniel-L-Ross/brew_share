@@ -1,0 +1,42 @@
+[
+{
+    "model": "brew_shareapi.brewmethod",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "method_image": "coffee_pics/2021/06/11/chemex.png",
+        "website": "https://www.chemexcoffeemaker.com/six-cup-classic-",
+        "name": "Chemex - 6 cup"
+    }
+},
+{
+    "model": "brew_shareapi.brewmethod",
+    "pk": 2,
+    "fields": {
+        "user": 1,
+        "method_image": "coffee_pics/2021/06/11/Screen_Shot_2021-06-11_at_9.27.42_AM.png",
+        "website": "https://global.hario.com/seihin/productdetail.php?",
+        "name": "V60"
+    }
+},
+{
+    "model": "brew_shareapi.brewmethod",
+    "pk": 3,
+    "fields": {
+        "user": 2,
+        "method_image": "coffee_pics/2021/06/11/kalita.jpeg",
+        "website": "http://kalita.ae/products/waveseries/2762",
+        "name": "Kalita Wave - Stainless Steel"
+    }
+},
+{
+    "model": "brew_shareapi.brewmethod",
+    "pk": 4,
+    "fields": {
+        "user": 3,
+        "method_image": "coffee_pics/2021/06/11/AeroPress-Go-1.jpeg",
+        "website": "https://aeropress.com/product/aeropress-go-travel-",
+        "name": "Aeropress - Travel"
+    }
+}
+]

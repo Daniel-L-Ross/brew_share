@@ -1,0 +1,41 @@
+[
+{
+    "model": "brew_shareapi.brewer",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "bio": "holder of knowledge",
+        "is_admin": true,
+        "profile_image": "user_pics/2021/06/10/dan_suit_copy.png",
+        "current_coffee": "Humphrey's Street Adado",
+        "current_brew_method": "Pour over",
+        "private": false
+    }
+},
+{
+    "model": "brew_shareapi.brewer",
+    "pk": 2,
+    "fields": {
+        "user": 2,
+        "bio": "Jon",
+        "is_admin": false,
+        "profile_image": "user_pics/2021/06/11/dog1.jpeg",
+        "current_coffee": "",
+        "current_brew_method": "",
+        "private": false
+    }
+},
+{
+    "model": "brew_shareapi.brewer",
+    "pk": 3,
+    "fields": {
+        "user": 3,
+        "bio": "Drinker of coffee",
+        "is_admin": false,
+        "profile_image": "user_pics/2021/06/11/dog2.jpeg",
+        "current_coffee": "",
+        "current_brew_method": "",
+        "private": true
+    }
+}
+]

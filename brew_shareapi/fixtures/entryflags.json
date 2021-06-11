@@ -1,0 +1,13 @@
+[
+{
+    "model": "brew_shareapi.entryflag",
+    "pk": 1,
+    "fields": {
+        "reporter": 2,
+        "admin": 1,
+        "entry": 3,
+        "reason": "Not about coffee",
+        "resolution": "none"
+    }
+}
+]
