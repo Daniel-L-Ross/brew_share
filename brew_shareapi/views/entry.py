@@ -3,47 +3,11 @@ import datetime
 from django.core.exceptions import ValidationError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
-from rest_framework import serializers
 from rest_framework import status
-from django.contrib.auth.models import User
 from brew_shareapi.models import ( Entry, Brewer, Coffee,
                                     BrewMethod)
+from brew_shareapi.serializers import EntrySerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-
-class UserSerializer(serializers.ModelSerializer):
-    """JSON serializer for brewer's related Django user"""
-    class Meta:
-        model = User
-        fields = ('first_name', 'last_name', 'username', )
-
-class BrewerSerializer(serializers.ModelSerializer):
-    """JSON serializer for """
-
-class MethodSerializer(serializers.ModelSerializer):
-    """JSON serializer for brew methods"""
-    class Meta:
-        model = BrewMethod
-        fields = ('id', 'name','method_image', 'website', )
-
-class CoffeeSerializer(serializers.ModelSerializer):
-    """JSON serializer for coffees"""
-    class Meta:
-        model = Coffee
-        fields = ('id', 'roaster', 'name', 'country',
-                    'region', 'process', 'recommended_method', 'website', 
-                    )
-
-class EntrySerializer(serializers.ModelSerializer):
-    """JSON serializer for products"""
-    user = UserSerializer(many=False)
-    method = MethodSerializer(many=False)
-    coffee = CoffeeSerializer(many=False)
-    class Meta:
-        model = Entry
-        fields = ('id', 'title', 'date', 'user',
-                    'coffee', 'grind_size', 'method', 'rating',
-                    'tasting_notes', 'review', 'setup', 'water_temp',
-                    'water_volume', 'recipe', 'recommend', )
 
 class EntryView(ViewSet):
     """Request handlers for Entries on the brew_share app"""
