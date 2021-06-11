@@ -6,8 +6,3 @@ class EntryFlag(models.Model):
     entry = models.ForeignKey('Entry', on_delete=models.CASCADE)
     reason = models.CharField(max_length=255)
     resolution = models.CharField(max_length=255)
-
-    class Meta:
-        verbose_name = ("entryflag")
-        verbose_name_plural = ("entryflags")
-

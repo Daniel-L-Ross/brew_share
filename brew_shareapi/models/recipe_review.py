@@ -6,8 +6,3 @@ class RecipeReview(models.Model):
     entry = models.ForeignKey('Entry', on_delete=models.CASCADE)
     review = models.CharField(max_length=255)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)],)
-
-    class Meta:
-        verbose_name = ("recipereview")
-        verbose_name_plural = ("recipereviews")
-
