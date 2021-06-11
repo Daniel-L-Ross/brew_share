@@ -1,0 +1,35 @@
+[
+{
+    "model": "brew_shareapi.entrystep",
+    "pk": 1,
+    "fields": {
+        "entry": 1,
+        "step_image": "coffee_pics/2021/06/11/chemex_e65wInf.png",
+        "descriptor": "pour",
+        "instruction": "50 grams water in a spiral from center. Allow grounds to bloom",
+        "seconds": 0
+    }
+},
+{
+    "model": "brew_shareapi.entrystep",
+    "pk": 2,
+    "fields": {
+        "entry": 1,
+        "step_image": "coffee_pics/2021/06/11/chemex_LIEmYRx.png",
+        "descriptor": "Pour",
+        "instruction": "50 grams water, to 100 total.",
+        "seconds": 30
+    }
+},
+{
+    "model": "brew_shareapi.entrystep",
+    "pk": 3,
+    "fields": {
+        "entry": 1,
+        "step_image": "coffee_pics/2021/06/11/chemex_OgPf19K.png",
+        "descriptor": "POUR",
+        "instruction": "100 grams water every 1 minute, to 600g total.",
+        "seconds": 60
+    }
+}
+]

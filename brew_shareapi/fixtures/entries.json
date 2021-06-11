@@ -1,0 +1,68 @@
+[
+{
+    "model": "brew_shareapi.entry",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "coffee": 2,
+        "method": 1,
+        "grind_size": "Medium-fine",
+        "title": "Classic chemex",
+        "tasting_notes": "Light and fruity",
+        "review": "This is my go-to brew!",
+        "rating": 5,
+        "setup": "Place the filter in the chemex and rinse with boiled water. Dispose of water before adding grounds to the filter.",
+        "date": "2021-06-11",
+        "water_temp": 205,
+        "water_volume": 600,
+        "private": false,
+        "block": false,
+        "recipe": false,
+        "recommend": false
+    }
+},
+{
+    "model": "brew_shareapi.entry",
+    "pk": 2,
+    "fields": {
+        "user": 2,
+        "coffee": 3,
+        "method": 3,
+        "grind_size": "Medium",
+        "title": "Aeropress experiment 001",
+        "tasting_notes": "Dark, bitter",
+        "review": "Steeped too long",
+        "rating": 3,
+        "setup": "Heat water, wet filter. Inverted aeropress.",
+        "date": "2021-06-09",
+        "water_temp": 190,
+        "water_volume": 250,
+        "private": false,
+        "block": false,
+        "recipe": false,
+        "recommend": false
+    }
+},
+{
+    "model": "brew_shareapi.entry",
+    "pk": 3,
+    "fields": {
+        "user": 3,
+        "coffee": 1,
+        "method": 1,
+        "grind_size": "None",
+        "title": "Picture of a dog",
+        "tasting_notes": "Cute dog!",
+        "review": "11/10 would pet",
+        "rating": 5,
+        "setup": "Good boy!",
+        "date": "2021-06-11",
+        "water_temp": 15,
+        "water_volume": 500,
+        "private": false,
+        "block": false,
+        "recipe": false,
+        "recommend": false
+    }
+}
+]

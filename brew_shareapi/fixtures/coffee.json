@@ -1,0 +1,50 @@
+[
+{
+    "model": "brew_shareapi.coffee",
+    "pk": 1,
+    "fields": {
+        "user": 1,
+        "coffee_image": "coffee_pics/2021/06/11/HS_-_Adado.jpeg",
+        "roaster": "Humphrey's Street",
+        "website": "https://humphreysstreet.com/product-category/coffe",
+        "name": "Adado",
+        "country": "Ethiopia",
+        "region": "Guanga, Shara, Yirgacheffe",
+        "process": "Natural",
+        "recommended_method": "Aeropress, v60",
+        "tasting_notes": "Blueberry, Grape, Lively, Smooth"
+    }
+},
+{
+    "model": "brew_shareapi.coffee",
+    "pk": 2,
+    "fields": {
+        "user": 2,
+        "coffee_image": "coffee_pics/2021/06/11/HS_-_Peaberry.jpeg",
+        "roaster": "Humphrey's Street",
+        "website": "https://humphreysstreet.com/product-category/coffe",
+        "name": "Kilimanjaro Peaberry",
+        "country": "Tanzania",
+        "region": "Mount Kilimanjaro",
+        "process": "Washed",
+        "recommended_method": "Kalita Wave 185 (ceramic), v60",
+        "tasting_notes": "Complex, Crisp Apple, Juicy"
+    }
+},
+{
+    "model": "brew_shareapi.coffee",
+    "pk": 3,
+    "fields": {
+        "user": 3,
+        "coffee_image": "coffee_pics/2021/06/11/Crema.jpeg",
+        "roaster": "Crema",
+        "website": "https://crema-coffee.com/shopcoffee",
+        "name": "NIQUINHO",
+        "country": "Brazil",
+        "region": "Minas Gerais",
+        "process": "Natural",
+        "recommended_method": "V60",
+        "tasting_notes": "Pineapple, Caramel, Pecan"
+    }
+}
+]
