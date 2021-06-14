@@ -15,4 +15,3 @@ class BrewerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Brewer
         fields = ('user', )
-        depth = 1

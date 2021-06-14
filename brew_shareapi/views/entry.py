@@ -103,3 +103,30 @@ class EntryView(ViewSet):
             return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def update(self, request, pk=None):
+        """Handle requests to update an entry"""
+        try:
+            brewer = Brewer.objects.get(user=request.auth.user)
+            entry = Entry.objects.get(pk=pk, brewer=brewer)
+
+            entry.coffee = Coffee.objects.get(pk=request.data["coffee"])
+            entry.method = BrewMethod.objects.get(pk=request.data["method"])
+            entry.grind_size = request.data["grindSize"]
+            entry.coffee_amount = request.data["coffeeAmount"]
+            entry.title = request.data["title"]
+            entry.tasting_notes = request.data["tastingNotes"]
+            entry.review = request.data["review"]
+            entry.rating = request.data["rating"]
+            entry.setup = request.data["setup"]
+            entry.water_temp = request.data["waterTemp"]
+            entry.water_volume = request.data["waterVolume"]
+            entry.private = request.data["private"]
+
+            entry.save()
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except Entry.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
