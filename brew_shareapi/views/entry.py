@@ -4,8 +4,9 @@ from django.core.exceptions import ValidationError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.decorators import action
 from brew_shareapi.models import ( Entry, Brewer, Coffee,
-                                    BrewMethod)
+                                    BrewMethod, FavoriteEntry)
 from brew_shareapi.serializers import EntrySerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
@@ -92,7 +93,7 @@ class EntryView(ViewSet):
 
             # any user can view public, unblocked posts
             else:
-                entry = Entry.objects.get(pk=pk, private=False, blocked=False)
+                entry = Entry.objects.get(pk=pk, private=False, block=False)
             
             serializer = EntrySerializer(
                 entry, many=False, context={'request': request}
@@ -134,7 +135,6 @@ class EntryView(ViewSet):
     def destroy(self, request, pk=None):
         """Handle DELETE requests for entries"""
         try:
-            # brewer = Brewer.objects.get(user=request.auth.user)
             entry = Entry.objects.select_related('brewer').get(pk=pk, brewer__user=request.auth.user)
             entry.delete()
 
@@ -144,3 +144,33 @@ class EntryView(ViewSet):
             return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(methods=['post', 'delete'], detail=True)
+    def favorite(self, request, pk=None):
+        """Handle requests for favoriting an entry or removing the favorite"""
+
+        if request.method == "POST":
+            try:
+                brewer = Brewer.objects.get(user=request.auth.user)
+                entry = Entry.objects.get(pk=pk, private=False, block=False)
+                
+                try:
+                    favorite = FavoriteEntry.objects.get(
+                        brewer=brewer, entry=entry
+                    )
+                    return Response(
+                    {'message': 'User already favorited this entry.'},
+                    status=status.HTTP_204_NO_CONTENT
+                    )
+                except FavoriteEntry.DoesNotExist:
+                    favorite = FavoriteEntry()
+                    favorite.entry = entry
+                    favorite.brewer = brewer
+                    favorite.save()
+
+            except Entry.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        
