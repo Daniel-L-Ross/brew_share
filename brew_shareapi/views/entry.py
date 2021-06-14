@@ -78,10 +78,10 @@ class EntryView(ViewSet):
         brewer = Brewer.objects.get(user=user)
         entry = Entry.objects.get(pk=pk)
         try:
-
             if brewer.is_admin:
                 entry = Entry.objects.get(pk=pk, private=False)
-            
+            elif entry.user:
+                entry = Entry.objects.get(pk=pk, private=False, blocked=False)
             
             serializer = EntrySerializer(
                 entry, many=False, context={'request': request}

@@ -2,7 +2,7 @@ from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
 class Entry(models.Model):
-    user = models.ForeignKey('Brewer', on_delete=models.CASCADE)
+    brewer = models.ForeignKey('Brewer', on_delete=models.CASCADE)
     coffee = models.ForeignKey("Coffee", on_delete=models.DO_NOTHING)
     method = models.ForeignKey("BrewMethod", on_delete=models.DO_NOTHING)
     grind_size = models.CharField(max_length=25)

@@ -3,7 +3,7 @@
     "model": "brew_shareapi.entry",
     "pk": 1,
     "fields": {
-        "user": 1,
+        "brewer": 1,
         "coffee": 2,
         "method": 1,
         "grind_size": "Medium-fine",
@@ -26,7 +26,7 @@
     "model": "brew_shareapi.entry",
     "pk": 2,
     "fields": {
-        "user": 2,
+        "brewer": 2,
         "coffee": 3,
         "method": 3,
         "grind_size": "Medium",
@@ -49,7 +49,7 @@
     "model": "brew_shareapi.entry",
     "pk": 3,
     "fields": {
-        "user": 3,
+        "brewer": 3,
         "coffee": 1,
         "method": 1,
         "grind_size": "None",

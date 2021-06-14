@@ -3,7 +3,7 @@
     "model": "brew_shareapi.coffee",
     "pk": 1,
     "fields": {
-        "user": 1,
+        "brewer": 1,
         "coffee_image": "coffee_pics/2021/06/11/HS_-_Adado.jpeg",
         "roaster": "Humphrey's Street",
         "website": "https://humphreysstreet.com/product-category/coffe",
@@ -19,7 +19,7 @@
     "model": "brew_shareapi.coffee",
     "pk": 2,
     "fields": {
-        "user": 2,
+        "brewer": 2,
         "coffee_image": "coffee_pics/2021/06/11/HS_-_Peaberry.jpeg",
         "roaster": "Humphrey's Street",
         "website": "https://humphreysstreet.com/product-category/coffe",
@@ -35,7 +35,7 @@
     "model": "brew_shareapi.coffee",
     "pk": 3,
     "fields": {
-        "user": 3,
+        "brewer": 3,
         "coffee_image": "coffee_pics/2021/06/11/Crema.jpeg",
         "roaster": "Crema",
         "website": "https://crema-coffee.com/shopcoffee",
