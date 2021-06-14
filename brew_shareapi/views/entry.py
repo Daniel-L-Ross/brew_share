@@ -23,6 +23,7 @@ class EntryView(ViewSet):
         new_entry.coffee = Coffee.objects.get(pk=request.data["coffee"])
         new_entry.method = BrewMethod.objects.get(pk=request.data["method"])
         new_entry.grind_size = request.data["grindSize"]
+        new_entry.coffee_amount = request.data["coffeeAmount"]
         new_entry.title = request.data["title"]
         new_entry.date = datetime.date.today()
         new_entry.tasting_notes = request.data["tastingNotes"]
@@ -56,9 +57,38 @@ class EntryView(ViewSet):
         """
         user = request.auth.user
 
-        entries = Entry.objects.all().filter(private=False).filter(block=False)
+        entries = Entry.objects.all().order_by("date")
+        # .filter(private=False).filter(block=False)
+
+        user_id = request.query_params.get('user_id', None)
+        if user_id == str(user.id):
+            entries = entries.filter(user__id=user_id)
+        else:
+            entries = entries.filter(private=False).filter(block=False)
+
 
         serializer = EntrySerializer(
             entries, many=True, context={'request': request}
         )
         return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        """Handle GET request for single entry"""
+        user = request.auth.user
+        brewer = Brewer.objects.get(user=user)
+        entry = Entry.objects.get(pk=pk)
+        try:
+
+            if brewer.is_admin:
+                entry = Entry.objects.get(pk=pk, private=False)
+            
+            
+            serializer = EntrySerializer(
+                entry, many=False, context={'request': request}
+            )
+            return Response(serializer.data)
+        
+        except Entry.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
