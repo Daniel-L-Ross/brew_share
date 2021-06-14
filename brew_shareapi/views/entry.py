@@ -78,6 +78,9 @@ class EntryView(ViewSet):
         user = request.auth.user
         brewer = Brewer.objects.get(user=user)
         entry = Entry.objects.get(pk=pk)
+        # entry.coffee = Coffee.objects.get(pk=entry.coffee_id)
+        # entry.brewer = user
+        # entry.method = BrewMethod.objects.get(pk=entry.method_id)
         try:
             # return a post if the user owns it
             if entry.brewer == brewer:

@@ -9,4 +9,10 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('first_name', 'last_name', 'username', )
 
 class BrewerSerializer(serializers.ModelSerializer):
-    """JSON serializer for """
+    """JSON serializer for brewer extension of user model"""
+    user = UserSerializer(many=False)
+
+    class Meta:
+        model = Brewer
+        fields = ('user', )
+        depth = 1
