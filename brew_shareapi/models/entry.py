@@ -6,6 +6,7 @@ class Entry(models.Model):
     coffee = models.ForeignKey("Coffee", on_delete=models.DO_NOTHING)
     method = models.ForeignKey("BrewMethod", on_delete=models.DO_NOTHING)
     grind_size = models.CharField(max_length=25)
+    coffee_amount = models.IntegerField()
     title = models.CharField(max_length=50)
     tasting_notes = models.CharField(max_length=50)
     review = models.CharField(max_length=255)
