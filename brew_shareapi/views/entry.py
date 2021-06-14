@@ -130,3 +130,17 @@ class EntryView(ViewSet):
             return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def destroy(self, request, pk=None):
+        """Handle DELETE requests for entries"""
+        try:
+            # brewer = Brewer.objects.get(user=request.auth.user)
+            entry = Entry.objects.select_related('brewer').get(pk=pk, brewer__user=request.auth.user)
+            entry.delete()
+
+            return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+        except Entry.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
