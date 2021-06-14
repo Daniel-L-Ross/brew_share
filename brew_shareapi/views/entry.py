@@ -173,4 +173,17 @@ class EntryView(ViewSet):
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-        
+        elif request.method == "DELETE":
+            try:
+                brewer = Brewer.objects.get(user=request.auth.user)
+                entry = Entry.objects.get(pk=pk)
+
+                favorite = FavoriteEntry.objects.get(
+                        brewer=brewer, entry=entry
+                )
+                favorite.delete()
+                
+            except Entry.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
