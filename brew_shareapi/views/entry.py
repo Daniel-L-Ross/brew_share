@@ -19,7 +19,7 @@ class EntryView(ViewSet):
             Response -- JSON serialized entry instance
         """
         new_entry = Entry()
-        new_entry.user = Brewer.objects.get(user=request.auth.user)
+        new_entry.brewer = Brewer.objects.get(user=request.auth.user)
         new_entry.coffee = Coffee.objects.get(pk=request.data["coffee"])
         new_entry.method = BrewMethod.objects.get(pk=request.data["method"])
         new_entry.grind_size = request.data["grindSize"]
@@ -56,13 +56,14 @@ class EntryView(ViewSet):
             Response -- JSON serialized list of entries
         """
         user = request.auth.user
+        brewer = Brewer.objects.get(user=user)
 
         entries = Entry.objects.all().order_by("date")
         # .filter(private=False).filter(block=False)
 
         user_id = request.query_params.get('user_id', None)
         if user_id == str(user.id):
-            entries = entries.filter(user__id=user_id)
+            entries = entries.filter(brewer=brewer)
         else:
             entries = entries.filter(private=False).filter(block=False)
 
@@ -78,9 +79,16 @@ class EntryView(ViewSet):
         brewer = Brewer.objects.get(user=user)
         entry = Entry.objects.get(pk=pk)
         try:
-            if brewer.is_admin:
-                entry = Entry.objects.get(pk=pk, private=False)
-            elif entry.user:
+            # return a post if the user owns it
+            if entry.brewer == brewer:
+                entry = entry
+
+            # admin can see blocked posts but not private posts
+            elif brewer.is_admin and entry.private == False:
+                entry = entry
+
+            # any user can view public, unblocked posts
+            else:
                 entry = Entry.objects.get(pk=pk, private=False, blocked=False)
             
             serializer = EntrySerializer(

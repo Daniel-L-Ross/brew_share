@@ -5,7 +5,7 @@ class EntrySerializer(serializers.ModelSerializer):
     """JSON serializer for products"""
     class Meta:
         model = Entry
-        fields = ('id', 'title', 'date', 'user',
+        fields = ('id', 'title', 'date', 'brewer',
                     'coffee', 'grind_size', 'method', 'rating',
                     'tasting_notes', 'review', 'setup', 'water_temp',
                     'water_volume', 'recipe', 'recommend', )
