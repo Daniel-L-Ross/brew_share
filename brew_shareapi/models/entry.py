@@ -1,3 +1,4 @@
+from brew_shareapi.models.entry_step import EntryStep
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -19,6 +20,12 @@ class Entry(models.Model):
     block = models.BooleanField()
     recipe = models.BooleanField()
     recommend = models.BooleanField()
-    
+
+    @property
+    def steps(self):
+        all_steps = EntryStep.objects.filter(entry=self).order_by("seconds")
+
+        return all_steps
+        
     class Meta:
         verbose_name_plural = 'entries'
