@@ -200,7 +200,11 @@ class EntryView(ViewSet):
             entry = Entry.objects.get(pk=pk)
             try:
                 report = EntryReport.get(reporter=reporter, entry=entry)
-            except EntryReport.DoesNotExist as ex:
-                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except EntryReport.DoesNotExist:
+                report = EntryReport()
+                report.reporter = reporter
+                report.entry = entry
+                report.reason = request.data["reason"]
+                report.save()
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
