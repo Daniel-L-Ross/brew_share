@@ -21,5 +21,14 @@ class BrewMethodView(ViewSet):
         new_method.website = request.data["website"]
         new_method.name = request.data["name"]
 
+        try:
+            new_method.clean_fields()
+        except ValidationError as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         new_method.save()
+
+        serializer = MethodSerializer(
+            new_method, context={'request': request}
+        )
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
