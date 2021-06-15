@@ -11,3 +11,5 @@ class Brewer(models.Model):
     current_coffee = models.CharField(max_length=50, blank=True, null=True)
     current_brew_method = models.CharField(max_length=50, blank=True, null=True)
     private = models.BooleanField(null=True)
+
+    # TODO: add properties to get firstname lastname username
