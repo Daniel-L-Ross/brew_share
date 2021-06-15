@@ -1,2 +1,2 @@
 from .entry import EntryView
-from .brew_method import BrewMethod
+from .brew_method import BrewMethodView

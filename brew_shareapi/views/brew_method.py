@@ -32,3 +32,26 @@ class BrewMethodView(ViewSet):
             new_method, context={'request': request}
         )
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def list(self, request):
+        """Handle GET operations
+        Returns:
+            Response -- JSON serialized list of brew methods
+        """
+        methods = BrewMethod.objects.all().order_by("name")
+
+        serializer = MethodSerializer(
+        methods, many=True, context={'request': request}
+        )
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk=None):
+        """Handle GET request for single method"""
+        try:
+            method = BrewMethod.objects.get(pk=pk)
+            serializer = MethodSerializer(method, context={'request': request})
+            return Response(serializer.data)
+        except BrewMethod.DoesNotExist as ex:
+            return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+        except Exception as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
