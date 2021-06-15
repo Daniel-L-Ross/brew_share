@@ -48,3 +48,5 @@ class BrewerView(ViewSet):
             return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
         except Exception as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        # TODO: if updated to allow all users to view, block non-admin from seeing banned users
