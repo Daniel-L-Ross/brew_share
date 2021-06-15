@@ -197,7 +197,7 @@ class EntryView(ViewSet):
         """
         if request.method == "POST":
             reporter = Brewer.objects.get(user=request.auth.user)
-            entry = Entry.objects.get(pk=pk)
+            entry = Entry.objects.get(pk=pk, block=False, private=False)
             try:
                 report = EntryReport.get(reporter=reporter, entry=entry)
             except EntryReport.DoesNotExist:
@@ -206,5 +206,26 @@ class EntryView(ViewSet):
                 report.entry = entry
                 report.reason = request.data["reason"]
                 report.save()
+                return Response({}, status=status.HTTP_201_CREATED)
+            except Entry.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(methods=['post'], detail=True)
+    def private(self, request, pk=None):
+        """
+        Toggle privacy of a post by making a POST request to
+        entries/pk/private
+        """
+        if request.method == "POST":
+            brewer = Brewer.objects.get(user=request.auth.user)
+            entry = Entry.objects.get(pk=pk, brewer=brewer)
+            try:
+                entry.private = not entry.private
+                entry.save()
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
+            except Entry.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
