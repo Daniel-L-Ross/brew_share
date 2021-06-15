@@ -3,7 +3,7 @@
     "model": "brew_shareapi.favoriteentry",
     "pk": 1,
     "fields": {
-        "user": 1,
+        "brewer": 1,
         "entry": 2
     }
 },
@@ -11,7 +11,7 @@
     "model": "brew_shareapi.favoriteentry",
     "pk": 2,
     "fields": {
-        "user": 2,
+        "brewer": 2,
         "entry": 1
     }
 },
@@ -19,7 +19,7 @@
     "model": "brew_shareapi.favoriteentry",
     "pk": 3,
     "fields": {
-        "user": 3,
+        "brewer": 3,
         "entry": 3
     }
 }
