@@ -124,7 +124,12 @@ class EntryView(ViewSet):
             entry.water_temp = request.data["waterTemp"]
             entry.water_volume = request.data["waterVolume"]
             entry.private = request.data["private"]
-
+            
+            try:
+                entry.clean_fields()
+            except ValidationError as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
             entry.save()
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 

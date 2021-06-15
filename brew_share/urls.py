@@ -20,11 +20,12 @@ from rest_framework import routers
 from django.conf import settings
 from django.conf.urls.static import static
 import rest_framework
-from brew_shareapi.views import EntryView
+from brew_shareapi.views import EntryView, BrewMethodView
 # from brew_shareapi.views import register_user, login_user
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'entries', EntryView, 'entries')
+router.register(r'entries', EntryView, 'entry')
+router.register(r'methods', BrewMethodView, 'method')
 
 urlpatterns = [
     # path('register', register_user),
