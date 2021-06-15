@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 from brew_shareapi.models import ( Entry, Brewer, Coffee,
-                                    BrewMethod, FavoriteEntry)
+                                    BrewMethod, FavoriteEntry, EntryReport)
 from brew_shareapi.serializers import EntrySerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
@@ -185,6 +185,22 @@ class EntryView(ViewSet):
                 favorite.delete()
 
             except Entry.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(methods=['post'], detail=True)
+    def report(self, request, pk=None):
+        """
+        Report a post to create an entry_flag so an admin can review, 
+        and decide if the content should be blocked.
+        """
+        if request.method == "POST":
+            reporter = Brewer.objects.get(user=request.auth.user)
+            entry = Entry.objects.get(pk=pk)
+            try:
+                report = EntryReport.get(reporter=reporter, entry=entry)
+            except EntryReport.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
