@@ -8,10 +8,18 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('first_name', 'last_name', 'username', )
 
-class BrewerSerializer(serializers.ModelSerializer):
+class BrewerListSerializer(serializers.ModelSerializer):
     """JSON serializer for brewer extension of user model"""
     user = UserSerializer(many=False)
 
     class Meta:
         model = Brewer
-        fields = ('user', )
+        fields = ('user', 'profile_image' )
+
+class BrewerDetailSerializer(serializers.ModelSerializer):
+    """JSON serializer for brewer extension of user model"""
+    user = UserSerializer(many=False)
+
+    class Meta:
+        model = Brewer
+        fields = ('user', 'bio', 'profile_image', 'current_coffee', 'current_brew_method')

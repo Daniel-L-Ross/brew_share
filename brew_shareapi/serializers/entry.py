@@ -2,13 +2,13 @@ from brew_shareapi.serializers.entry_step import StepSerializer
 from rest_framework import serializers
 from brew_shareapi.models import Entry
 from brew_shareapi.serializers import (CoffeeListSerializer, CoffeeDetailSerializer, MethodSerializer,
-                                        BrewerSerializer, StepSerializer)
+                                        BrewerListSerializer, StepSerializer)
 
 class EntrySerializer(serializers.ModelSerializer):
     """JSON serializer for products"""
     coffee = CoffeeListSerializer(many=False)
     method = MethodSerializer(many=False)
-    brewer = BrewerSerializer(many=False)
+    brewer = BrewerListSerializer(many=False)
     steps = StepSerializer(many=True)
 
     class Meta:
