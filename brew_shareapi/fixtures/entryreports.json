@@ -1,6 +1,6 @@
 [
 {
-    "model": "brew_shareapi.entryflag",
+    "model": "brew_shareapi.entryreport",
     "pk": 1,
     "fields": {
         "reporter": 2,

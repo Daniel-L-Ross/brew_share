@@ -8,6 +8,6 @@ class Brewer(models.Model):
     profile_image = models.ImageField(
         upload_to='user_pics/%Y/%m/%d', height_field=None,
         width_field=None, max_length=None, null=True)
-    current_coffee = models.CharField(max_length=50, blank=True)
-    current_brew_method = models.CharField(max_length=50, blank=True)
-    private = models.BooleanField()
+    current_coffee = models.CharField(max_length=50, blank=True, null=True)
+    current_brew_method = models.CharField(max_length=50, blank=True, null=True)
+    private = models.BooleanField(null=True)
