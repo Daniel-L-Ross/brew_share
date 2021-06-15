@@ -5,5 +5,5 @@ class BrewMethod(models.Model):
     method_image = models.ImageField(
         upload_to='coffee_pics/%Y/%m/%d', height_field=None,
         width_field=None, max_length=None, null=True)
-    website = models.CharField(max_length=50)
+    website = models.CharField(max_length=50, null=True)
     name = models.CharField(max_length=50)
