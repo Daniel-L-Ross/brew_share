@@ -1,10 +1,13 @@
 from django.http import HttpResponse
+from django.core.files.base import ContentFile
 from django.contrib.auth import authenticate
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from brew_shareapi.models import Brewer
 import json
+import uuid
+import base64
 
 @csrf_exempt
 def login_user(request):
@@ -52,10 +55,16 @@ def register_user(request):
         last_name=req_body['last_name']
     )
 
+    # handle base64 image string for profile image
+    format, imgstr = req_body['profileImage'].split(';base64')
+    ext = format.split('/'[-1])
+    data = ContentFile(base64.b64decode(imgstr), name=f'{new_user.id}-{uuid.uuid4()}.{ext}')
+
+    # save the brewer user extension
     brewer = Brewer.objects.create(
         bio=req_body['bio'],
         user=new_user,
-        profile_image=req_body['profileImage'],
+        profile_image=data,
         is_admin = False, 
         current_coffee = req_body['currentCoffee'],
         current_brew_method = req_body['currentBrewMethod'],
