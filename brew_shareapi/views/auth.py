@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from brew_shareapi.models import Brewer
+from brew_shareapi.image_handler import base64_image_handler
 import json
 
 @csrf_exempt
@@ -27,7 +28,7 @@ def login_user(request):
             brewer = Brewer.objects.get(user=authenticated_user)
             is_admin = brewer.is_admin
             brewer_id = brewer.id
-            data = json.dumps({"valid": True, "token": token.key, "id": brewer_id, "isStaff": is_admin})
+            data = json.dumps({"valid": True, "token": token.key, "id": brewer_id, "isAdmin": is_admin})
             return HttpResponse(data, content_type='application/json')
 
         else:
@@ -52,10 +53,14 @@ def register_user(request):
         last_name=req_body['last_name']
     )
 
+    # handle base64 image string for profile image
+    image_data = base64_image_handler(req_body['profileImage'], new_user.id)
+
+    # save the brewer user extension
     brewer = Brewer.objects.create(
         bio=req_body['bio'],
         user=new_user,
-        profile_image=req_body['profileImage'],
+        profile_image=image_data,
         is_admin = False, 
         current_coffee = req_body['currentCoffee'],
         current_brew_method = req_body['currentBrewMethod'],
