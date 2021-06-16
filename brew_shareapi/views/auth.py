@@ -18,28 +18,22 @@ def login_user(request):
 
     if request.method == 'POST':
 
-        email = req_body['email']
+        username = req_body['username']
         password = req_body['password']
-        
-        try:
-            user = User.objects.get(email=email)
-            authenticated_user = authenticate(username=user.username, password=password)
+        authenticated_user = authenticate(username=username, password=password)
 
-            if authenticated_user is not None:
-                token = Token.objects.get(user=authenticated_user)
-                brewer = Brewer.objects.get(user=authenticated_user)
-                is_admin = brewer.is_admin
-                brewer_id = brewer.id
-                data = json.dumps({"valid": True, "token": token.key, "id": brewer_id, "isAdmin": is_admin})
-                return HttpResponse(data, content_type='application/json')
+        if authenticated_user is not None:
+            token = Token.objects.get(user=authenticated_user)
+            brewer = Brewer.objects.get(user=authenticated_user)
+            is_admin = brewer.is_admin
+            brewer_id = brewer.id
+            data = json.dumps({"valid": True, "token": token.key, "id": brewer_id, "isAdmin": is_admin})
+            return HttpResponse(data, content_type='application/json')
 
-            else:
-                data = json.dumps({"valid": False})
-                return HttpResponse(data, content_type='application/json')
-        except User.DoesNotExist:
+        else:
             data = json.dumps({"valid": False})
             return HttpResponse(data, content_type='application/json')
-            
+
 @csrf_exempt
 def register_user(request):
     '''Handles the creation of a new brewer for authentication
