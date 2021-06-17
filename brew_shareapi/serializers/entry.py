@@ -4,7 +4,7 @@ from brew_shareapi.models import Entry
 from brew_shareapi.serializers import (CoffeeListSerializer, CoffeeDetailSerializer, MethodSerializer,
                                         BrewerListSerializer, StepSerializer)
 
-class EntryListSerializer(serializers.ModelSerializer):
+class EntryDetailSerializer(serializers.ModelSerializer):
     """JSON serializer for products"""
     coffee = CoffeeListSerializer(many=False)
     method = MethodSerializer(many=False)
@@ -18,12 +18,11 @@ class EntryListSerializer(serializers.ModelSerializer):
                     'rating', 'tasting_notes', 'review', 'setup',
                     'water_temp','water_volume', 'recipe', 'recommend', 'steps')
 
-class EntryDetailSerializer(serializers.ModelSerializer):
+class EntryListSerializer(serializers.ModelSerializer):
     """JSON serializer for products"""
     coffee = CoffeeListSerializer(many=False)
     method = MethodSerializer(many=False)
     brewer = BrewerListSerializer(many=False)
-    steps = StepSerializer(many=True)
 
     class Meta:
         model = Entry
