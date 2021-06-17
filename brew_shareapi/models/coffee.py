@@ -6,7 +6,7 @@ class Coffee(models.Model):
         upload_to='coffee_pics/%Y/%m/%d', height_field=None,
         width_field=None, max_length=None, null=True)
     roaster = models.CharField(max_length=50)
-    website = models.CharField(max_length=50)
+    website = models.CharField(max_length=255)
     name = models.CharField(max_length=50)
     country = models.CharField(max_length=50)
     region = models.CharField(max_length=50)
