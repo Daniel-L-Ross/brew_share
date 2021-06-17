@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from brew_shareapi.models import ( Entry, Brewer, Coffee,
                                     BrewMethod, FavoriteEntry, EntryReport)
-from brew_shareapi.serializers import EntrySerializer
+from brew_shareapi.serializers import (EntryListSerializer, EntryDetailSerializer)
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class EntryView(ViewSet):
@@ -45,7 +45,7 @@ class EntryView(ViewSet):
 
         new_entry.save()
 
-        serializer = EntrySerializer(
+        serializer = EntryDetailSerializer(
             new_entry, context={'request': request}
         )
 
@@ -60,7 +60,6 @@ class EntryView(ViewSet):
         brewer = Brewer.objects.get(user=user)
 
         entries = Entry.objects.all().order_by("date")
-        # .filter(private=False).filter(block=False)
 
         user_id = request.query_params.get('user_id', None)
         if user_id == str(user.id):
@@ -69,7 +68,7 @@ class EntryView(ViewSet):
             entries = entries.filter(private=False).filter(block=False)
 
 
-        serializer = EntrySerializer(
+        serializer = EntryListSerializer(
             entries, many=True, context={'request': request}
         )
         return Response(serializer.data)
@@ -96,7 +95,7 @@ class EntryView(ViewSet):
                 entry = Entry.objects.get(pk=pk, private=False, block=False)
             
             # steps 
-            serializer = EntrySerializer(
+            serializer = EntryDetailSerializer(
                 entry, many=False, context={'request': request}
             )
             return Response(serializer.data)
@@ -234,3 +233,5 @@ class EntryView(ViewSet):
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    # @acrion(methods=['get'], detail=False) use ths to make an action without a pk
