@@ -27,8 +27,8 @@ def login_user(request):
             token = Token.objects.get(user=authenticated_user)
             brewer = Brewer.objects.get(user=authenticated_user)
             is_admin = brewer.is_admin
-            brewer_id = brewer.id
-            data = json.dumps({"valid": True, "token": token.key, "id": brewer_id, "isAdmin": is_admin})
+
+            data = json.dumps({"valid": True, "token": token.key, "isAdmin": is_admin})
             return HttpResponse(data, content_type='application/json')
 
         else:
@@ -73,7 +73,6 @@ def register_user(request):
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=new_user)
     is_admin = brewer.is_admin
-    brewer_id = brewer.id
 
-    data = json.dumps({"valid": True, "token": token.key, "id": brewer_id, "isAdmin": is_admin})
+    data = json.dumps({"valid": True, "token": token.key, "isAdmin": is_admin})
     return HttpResponse(data, content_type='application/json')
