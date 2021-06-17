@@ -13,4 +13,5 @@ class CoffeeDetailSerializer(serializers.ModelSerializer):
         model = Coffee
         fields = ('id', 'roaster', 'name', 'country',
                     'region', 'process', 'recommended_method', 'website', 
-                    )
+                    'coffee_image', 'tasting_notes'
+                    ) 
