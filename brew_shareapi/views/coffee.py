@@ -18,7 +18,7 @@ class CoffeeView(ViewSet):
         """
         new_coffee = Coffee()
         new_coffee.brewer = Brewer.objects.get(user=request.auth.user)
-        new_coffee.coffee_image = request.data["CoffeeImage"]
+        new_coffee.coffee_image = request.data["coffeeImage"]
         new_coffee.roaster = request.data["roaster"]
         new_coffee.website = request.data["website"]
         new_coffee.name = request.data["name"]
