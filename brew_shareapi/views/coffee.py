@@ -40,7 +40,6 @@ class CoffeeView(ViewSet):
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         new_coffee.save()
-        # new_coffee.id = new_coffee.id
 
         serializer = CoffeeDetailSerializer(
             new_coffee, context={'request': request}
