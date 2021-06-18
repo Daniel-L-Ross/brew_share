@@ -78,7 +78,6 @@ class CoffeeView(ViewSet):
             else:
                 coffee = Coffee.objects.get(pk=pk, brewer=brewer)
 
-            coffee.coffee_image = request.data["CoffeeImage"]
             coffee.roaster = request.data["roaster"]
             coffee.website = request.data["website"]
             coffee.name = request.data["name"]
@@ -87,6 +86,13 @@ class CoffeeView(ViewSet):
             coffee.process = request.data["process"]
             coffee.recommended_method = request.data["recommendedMethod"]
             coffee.tasting_notes = request.data["tastingNotes"]
+
+            try:
+                image_data = base64_image_handler(request.data["coffeeImage"], coffee.name)
+                coffee.coffee_image = image_data
+            except:
+                coffee.coffee_image = None
+
             coffee.save()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)
