@@ -29,15 +29,18 @@ class CoffeeView(ViewSet):
         new_coffee.recommended_method = request.data["recommendedMethod"]
         new_coffee.tasting_notes = request.data["tastingNotes"]
         
-        image_data = base64_image_handler(request.data["coffeeImage", new_coffee.name])
-        new_coffee.coffee_image = image_data
-
+        try:
+            image_data = base64_image_handler(request.data["coffeeImage"], new_coffee.name)
+            new_coffee.coffee_image = image_data
+        except:
+            new_coffee.coffee_image = None
         try:
             new_coffee.clean_fields()
         except ValidationError as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         new_coffee.save()
+        # new_coffee.id = new_coffee.id
 
         serializer = CoffeeDetailSerializer(
             new_coffee, context={'request': request}
