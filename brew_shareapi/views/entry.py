@@ -21,19 +21,19 @@ class EntryView(ViewSet):
         """
         new_entry = Entry()
         new_entry.brewer = Brewer.objects.get(user=request.auth.user)
-        new_entry.coffee = Coffee.objects.get(pk=request.data["coffee"])
-        new_entry.method = BrewMethod.objects.get(pk=request.data["method"])
+        new_entry.coffee = Coffee.objects.get(pk=int(request.data["coffee"]))
+        new_entry.method = BrewMethod.objects.get(pk=int(request.data["method"]))
         new_entry.grind_size = request.data["grindSize"]
-        new_entry.coffee_amount = request.data["coffeeAmount"]
+        new_entry.coffee_amount = int(request.data["coffeeAmount"])
         new_entry.title = request.data["title"]
         new_entry.date = datetime.date.today()
         new_entry.tasting_notes = request.data["tastingNotes"]
         new_entry.review = request.data["review"]
-        new_entry.rating = request.data["rating"]
+        new_entry.rating = int(request.data["rating"])
         new_entry.setup = request.data["setup"]
-        new_entry.water_temp = request.data["waterTemp"]
-        new_entry.water_volume = request.data["waterVolume"]
-        new_entry.private = request.data["private"]
+        new_entry.water_temp = int(request.data["waterTemp"])
+        new_entry.water_volume = int(request.data["waterVolume"])
+        new_entry.private = int(request.data["private"])
         new_entry.block = False
         new_entry.recipe = False
         new_entry.recommend = False
