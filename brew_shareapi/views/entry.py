@@ -33,7 +33,7 @@ class EntryView(ViewSet):
         new_entry.setup = request.data["setup"]
         new_entry.water_temp = int(request.data["waterTemp"])
         new_entry.water_volume = int(request.data["waterVolume"])
-        new_entry.private = int(request.data["private"])
+        new_entry.private = bool(request.data["private"])
         new_entry.block = False
         new_entry.recipe = False
         new_entry.recommend = False
