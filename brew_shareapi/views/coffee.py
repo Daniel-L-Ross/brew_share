@@ -6,6 +6,8 @@ from rest_framework import status
 from brew_shareapi.models import Coffee, Brewer
 from brew_shareapi.serializers import CoffeeListSerializer, CoffeeDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from brew_shareapi.image_handler import base64_image_handler
+
 
 class CoffeeView(ViewSet):
     """Request handlers for coffees on the brew_share app"""
@@ -18,7 +20,6 @@ class CoffeeView(ViewSet):
         """
         new_coffee = Coffee()
         new_coffee.brewer = Brewer.objects.get(user=request.auth.user)
-        new_coffee.coffee_image = request.data["CoffeeImage"]
         new_coffee.roaster = request.data["roaster"]
         new_coffee.website = request.data["website"]
         new_coffee.name = request.data["name"]
@@ -27,7 +28,12 @@ class CoffeeView(ViewSet):
         new_coffee.process = request.data["process"]
         new_coffee.recommended_method = request.data["recommendedMethod"]
         new_coffee.tasting_notes = request.data["tastingNotes"]
-
+        
+        try:
+            image_data = base64_image_handler(request.data["coffeeImage"], new_coffee.name)
+            new_coffee.coffee_image = image_data
+        except:
+            new_coffee.coffee_image = None
         try:
             new_coffee.clean_fields()
         except ValidationError as ex:
@@ -72,7 +78,6 @@ class CoffeeView(ViewSet):
             else:
                 coffee = Coffee.objects.get(pk=pk, brewer=brewer)
 
-            coffee.coffee_image = request.data["CoffeeImage"]
             coffee.roaster = request.data["roaster"]
             coffee.website = request.data["website"]
             coffee.name = request.data["name"]
@@ -81,6 +86,13 @@ class CoffeeView(ViewSet):
             coffee.process = request.data["process"]
             coffee.recommended_method = request.data["recommendedMethod"]
             coffee.tasting_notes = request.data["tastingNotes"]
+
+            try:
+                image_data = base64_image_handler(request.data["coffeeImage"], coffee.name)
+                coffee.coffee_image = image_data
+            except:
+                coffee.coffee_image = None
+
             coffee.save()
 
             return Response({}, status=status.HTTP_204_NO_CONTENT)

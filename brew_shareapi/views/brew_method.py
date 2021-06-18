@@ -6,6 +6,7 @@ from rest_framework import status
 from brew_shareapi.models import BrewMethod, Brewer
 from brew_shareapi.serializers import MethodSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from brew_shareapi.image_handler import base64_image_handler
 
 class BrewMethodView(ViewSet):
     """Request handlers for Brew Methods on the brew_share app"""
@@ -18,9 +19,14 @@ class BrewMethodView(ViewSet):
         """
         new_method = BrewMethod()
         new_method.brewer = Brewer.objects.get(user=request.auth.user)
-        new_method.method_image = request.data["methodImage"]
         new_method.website = request.data["website"]
         new_method.name = request.data["name"]
+
+        try:
+            image_data = base64_image_handler(request.data["brewMethodImage"], new_method.name)
+            new_method.method_image = image_data
+        except:
+            new_method.method_image = None
 
         try:
             new_method.clean_fields()
@@ -65,9 +71,20 @@ class BrewMethodView(ViewSet):
                 method = BrewMethod.objects.get(pk=pk)
             else:
                 method = BrewMethod.objects.get(pk=pk, brewer=brewer)
-            method.method_image = request.data["methodImage"]
+            method.method_image = request.data["brewMethodImage"]
             method.website = request.data["website"]
             method.name = request.data["name"]
+            try:
+                image_data = base64_image_handler(request.data["brewMethodImage"], method.name)
+                method.method_image = image_data
+            except:
+                pass
+
+            try:
+                method.clean_fields()
+            except ValidationError as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
             method.save()
             return Response({}, status=status.HTTP_204_NO_CONTENT)
         except BrewMethod.DoesNotExist as ex:
