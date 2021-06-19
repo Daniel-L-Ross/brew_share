@@ -33,9 +33,18 @@ class Entry(models.Model):
 
     @property
     def edit_allowed(self):
-        """property to return boolean for conditional rendering on client side"""
+        """property to return boolean for conditional rendering on client side of edit and delete"""
         return self.__edit_allowed
 
     @edit_allowed.setter
     def edit_allowed(self, value):
         self.__edit_allowed = value
+
+    @property
+    def favorite(self):
+        """property to return boolean for conditional rendering on client side for favorites"""
+        return self.__favorite
+
+    @favorite.setter
+    def favorite(self, value):
+        self.__favorite = value

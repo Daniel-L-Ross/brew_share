@@ -93,6 +93,12 @@ class EntryView(ViewSet):
             else:
                 entry = Entry.objects.get(pk=pk, private=False, block=False)
                 entry.edit_allowed = False
+
+            try:
+                FavoriteEntry.objects.get(entry=entry, brewer=brewer)
+                entry.favorite = True
+            except FavoriteEntry.DoesNotExist:
+                entry.favorite = False
                 
             serializer = EntryDetailSerializer(
                 entry, many=False, context={'request': request}
@@ -188,6 +194,8 @@ class EntryView(ViewSet):
                 favorite.delete()
 
             except Entry.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except FavoriteEntry.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
