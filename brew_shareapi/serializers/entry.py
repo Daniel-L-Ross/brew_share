@@ -16,7 +16,7 @@ class EntryDetailSerializer(serializers.ModelSerializer):
         fields = ('id', 'title', 'date', 'brewer',
                     'coffee', 'grind_size', 'coffee_amount', 'method',
                     'rating', 'tasting_notes', 'review', 'setup',
-                    'water_temp','water_volume', 'recipe', 'recommend', 'steps')
+                    'water_temp','water_volume', 'recipe', 'recommend', 'steps', 'private')
 
 class EntryListSerializer(serializers.ModelSerializer):
     """JSON serializer for products"""

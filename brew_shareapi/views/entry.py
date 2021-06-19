@@ -111,18 +111,18 @@ class EntryView(ViewSet):
             brewer = Brewer.objects.get(user=request.auth.user)
             entry = Entry.objects.get(pk=pk, brewer=brewer)
 
-            entry.coffee = Coffee.objects.get(pk=request.data["coffee"])
-            entry.method = BrewMethod.objects.get(pk=request.data["method"])
+            entry.coffee = Coffee.objects.get(pk=int(request.data["coffee"]))
+            entry.method = BrewMethod.objects.get(pk=int(request.data["method"]))
             entry.grind_size = request.data["grindSize"]
-            entry.coffee_amount = request.data["coffeeAmount"]
+            entry.coffee_amount = int(request.data["coffeeAmount"])
             entry.title = request.data["title"]
             entry.tasting_notes = request.data["tastingNotes"]
             entry.review = request.data["review"]
-            entry.rating = request.data["rating"]
+            entry.rating = int(request.data["rating"])
             entry.setup = request.data["setup"]
-            entry.water_temp = request.data["waterTemp"]
-            entry.water_volume = request.data["waterVolume"]
-            entry.private = request.data["private"]
+            entry.water_temp = int(request.data["waterTemp"])
+            entry.water_volume = int(request.data["waterVolume"])
+            entry.private = bool(request.data["private"])
             
             try:
                 entry.clean_fields()
