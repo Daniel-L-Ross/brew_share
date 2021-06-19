@@ -23,9 +23,19 @@ class Entry(models.Model):
 
     @property
     def steps(self):
+        """property to return all steps on an entry"""
         all_steps = EntryStep.objects.filter(entry=self).order_by("seconds")
 
         return all_steps
         
     class Meta:
         verbose_name_plural = 'entries'
+
+    @property
+    def edit_allowed(self):
+        """property to return boolean for conditional rendering on client side"""
+        return self.__edit_allowed
+
+    @edit_allowed.setter
+    def edit_allowed(self, value):
+        self.__edit_allowed = value

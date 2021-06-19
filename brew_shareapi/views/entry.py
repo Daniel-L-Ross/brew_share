@@ -78,14 +78,13 @@ class EntryView(ViewSet):
         user = request.auth.user
         brewer = Brewer.objects.get(user=user)
         entry = Entry.objects.get(pk=pk)
-        # entry.coffee = Coffee.objects.get(pk=entry.coffee_id)
-        # entry.brewer = user
-        # entry.method = BrewMethod.objects.get(pk=entry.method_id)
+        
+        
         try:
             # return a post if the user owns it
             if entry.brewer == brewer:
                 entry = entry
-
+                entry.edit_allowed = True
             # admin can see blocked posts but not private posts
             elif brewer.is_admin and entry.private == False:
                 entry = entry
@@ -94,7 +93,6 @@ class EntryView(ViewSet):
             else:
                 entry = Entry.objects.get(pk=pk, private=False, block=False)
             
-            # steps 
             serializer = EntryDetailSerializer(
                 entry, many=False, context={'request': request}
             )
