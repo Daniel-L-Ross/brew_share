@@ -192,7 +192,7 @@ class EntryView(ViewSet):
                         brewer=brewer, entry=entry
                 )
                 favorite.delete()
-
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
             except Entry.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except FavoriteEntry.DoesNotExist as ex:
