@@ -88,11 +88,12 @@ class EntryView(ViewSet):
             # admin can see blocked posts but not private posts
             elif brewer.is_admin and entry.private == False:
                 entry = entry
-
+                entry.edit_allowed = False
             # any user can view public, unblocked posts
             else:
                 entry = Entry.objects.get(pk=pk, private=False, block=False)
-            
+                entry.edit_allowed = False
+                
             serializer = EntryDetailSerializer(
                 entry, many=False, context={'request': request}
             )
