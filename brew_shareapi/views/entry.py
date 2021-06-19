@@ -99,7 +99,7 @@ class EntryView(ViewSet):
                 entry.favorite = True
             except FavoriteEntry.DoesNotExist:
                 entry.favorite = False
-                
+
             serializer = EntryDetailSerializer(
                 entry, many=False, context={'request': request}
             )
@@ -177,7 +177,7 @@ class EntryView(ViewSet):
                     favorite.entry = entry
                     favorite.brewer = brewer
                     favorite.save()
-
+                return Response({}, status=status.HTTP_201_CREATED)
             except Entry.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
