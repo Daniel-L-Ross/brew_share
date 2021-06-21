@@ -19,8 +19,10 @@ def login_user(request):
 
     if request.method == 'POST':
 
-        username = req_body['username']
+        email = req_body['email']
         password = req_body['password']
+        user = User.objects.get(email=email)
+        username = user.username
         authenticated_user = authenticate(username=username, password=password)
 
         if authenticated_user is not None:
@@ -28,7 +30,7 @@ def login_user(request):
             brewer = Brewer.objects.get(user=authenticated_user)
             is_admin = brewer.is_admin
 
-            data = json.dumps({"valid": True, "token": token.key, "isAdmin": is_admin})
+            data = json.dumps({"valid": True, "token": token.key, "isAdmin": is_admin, "username": username})
             return HttpResponse(data, content_type='application/json')
 
         else:
@@ -73,6 +75,7 @@ def register_user(request):
     # Use the REST Framework's token generator on the new user account
     token = Token.objects.create(user=new_user)
     is_admin = brewer.is_admin
+    username = new_user.username
 
-    data = json.dumps({"valid": True, "token": token.key, "isAdmin": is_admin})
+    data = json.dumps({"valid": True, "token": token.key, "isAdmin": is_admin, "username": username})
     return HttpResponse(data, content_type='application/json')
