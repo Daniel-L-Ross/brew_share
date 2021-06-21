@@ -56,14 +56,15 @@ class EntryView(ViewSet):
         Returns:
             Response -- JSON serialized list of entries
         """
-        user = request.auth.user
-        brewer = Brewer.objects.get(user=user)
-
         entries = Entry.objects.filter(private=False, block=False).order_by("date")
 
         username = self.request.query_params.get('username', None)
         if username is not None:
-            entries = entries.filter(brewer__user_username=username)
+            if username == request.auth.user.username:
+                brewer = Brewer.objects.get(user=request.auth.user)
+                entries = brewer.entries.all()
+            else:
+                entries = entries.filter(brewer__user__username=username)
 
         serializer = EntryListSerializer(
             entries, many=True, context={'request': request}
@@ -72,8 +73,7 @@ class EntryView(ViewSet):
 
     def retrieve(self, request, pk=None):
         """Handle GET request for single entry"""
-        user = request.auth.user
-        brewer = Brewer.objects.get(user=user)
+        brewer = Brewer.objects.get(user=request.auth.user)
         entry = Entry.objects.get(pk=pk)
         
         
