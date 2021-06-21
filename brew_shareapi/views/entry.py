@@ -224,11 +224,11 @@ class EntryView(ViewSet):
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(methods=['get'], detail=False)
-    def myfavorites(self, request):
+    def favorites(self, request):
         """
-        Return a list of all entries that the request user has favorited
+        Return a list of all entries that the requested user has favorited
         """
-        brewer = Brewer.objects.get(user=request.auth.user)
+        brewer = Brewer.objects.get(user__username=request.data["username"], private=False)
         favorites = brewer.favorites.all()
 
         serializer = EntryListSerializer(
@@ -253,5 +253,3 @@ class EntryView(ViewSet):
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-    # @acrion(methods=['get'], detail=False) use ths to make an action without a pk
