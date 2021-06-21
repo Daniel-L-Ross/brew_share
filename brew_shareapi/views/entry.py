@@ -59,14 +59,11 @@ class EntryView(ViewSet):
         user = request.auth.user
         brewer = Brewer.objects.get(user=user)
 
-        entries = Entry.objects.all().order_by("date")
+        entries = Entry.objects.filter(private=False, block=False).order_by("date")
 
-        user_id = request.query_params.get('user_id', None)
-        if user_id == str(user.id):
-            entries = entries.filter(brewer=brewer)
-        else:
-            entries = entries.filter(private=False).filter(block=False)
-
+        username = self.request.query_params.get('username', None)
+        if username is not None:
+            entries = entries.filter(brewer__user_username=username)
 
         serializer = EntryListSerializer(
             entries, many=True, context={'request': request}
