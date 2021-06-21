@@ -223,7 +223,7 @@ class EntryView(ViewSet):
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(methods=['get'], detail=False)
+    @action(methods=['post'], detail=False)
     def favorites(self, request):
         """
         Return a list of all entries that the requested user has favorited
