@@ -223,6 +223,19 @@ class EntryView(ViewSet):
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @action(methods=['get'], detail=False)
+    def myfavorites(self, request):
+        """
+        Return a list of all entries that the request user has favorited
+        """
+        brewer = Brewer.objects.get(user=request.auth.user)
+        favorites = brewer.favorites.all()
+
+        serializer = EntryListSerializer(
+            favorites, many=True, context={'request': request}
+        )
+        return Response(serializer.data)
+
     @action(methods=['post'], detail=True)
     def private(self, request, pk=None):
         """

@@ -11,5 +11,6 @@ class Brewer(models.Model):
     current_coffee = models.CharField(max_length=50, blank=True)
     current_brew_method = models.CharField(max_length=50, blank=True)
     private = models.BooleanField(null=True)
+    favorites = models.ManyToManyField('Entry', through='FavoriteEntry', related_name='liked')
 
     # TODO: add properties to get firstname lastname username

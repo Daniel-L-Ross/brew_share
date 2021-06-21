@@ -28,3 +28,4 @@ class EntryListSerializer(serializers.ModelSerializer):
         model = Entry
         fields = ('id', 'title', 'brewer',
                     'coffee', 'method',)
+        depth = 2
