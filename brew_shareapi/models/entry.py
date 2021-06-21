@@ -9,8 +9,8 @@ class Entry(models.Model):
     grind_size = models.CharField(max_length=25)
     coffee_amount = models.IntegerField()
     title = models.CharField(max_length=50)
-    tasting_notes = models.CharField(max_length=50, null=True)
-    review = models.CharField(max_length=255, null=True)
+    tasting_notes = models.CharField(max_length=50, blank=True)
+    review = models.CharField(max_length=255, blank=True)
     rating = models.IntegerField(validators=[MinValueValidator(0), MaxValueValidator(5)],)
     setup = models.CharField(max_length=255)
     date = models.DateField()
@@ -23,9 +23,28 @@ class Entry(models.Model):
 
     @property
     def steps(self):
+        """property to return all steps on an entry"""
         all_steps = EntryStep.objects.filter(entry=self).order_by("seconds")
 
         return all_steps
         
     class Meta:
         verbose_name_plural = 'entries'
+
+    @property
+    def edit_allowed(self):
+        """property to return boolean for conditional rendering on client side of edit and delete"""
+        return self.__edit_allowed
+
+    @edit_allowed.setter
+    def edit_allowed(self, value):
+        self.__edit_allowed = value
+
+    @property
+    def favorite(self):
+        """property to return boolean for conditional rendering on client side for favorites"""
+        return self.__favorite
+
+    @favorite.setter
+    def favorite(self, value):
+        self.__favorite = value

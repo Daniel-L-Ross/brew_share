@@ -7,7 +7,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from brew_shareapi.models import ( Entry, Brewer, Coffee,
                                     BrewMethod, FavoriteEntry, EntryReport)
-from brew_shareapi.serializers import EntrySerializer
+from brew_shareapi.serializers import (EntryListSerializer, EntryDetailSerializer)
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class EntryView(ViewSet):
@@ -21,19 +21,19 @@ class EntryView(ViewSet):
         """
         new_entry = Entry()
         new_entry.brewer = Brewer.objects.get(user=request.auth.user)
-        new_entry.coffee = Coffee.objects.get(pk=request.data["coffee"])
-        new_entry.method = BrewMethod.objects.get(pk=request.data["method"])
+        new_entry.coffee = Coffee.objects.get(pk=int(request.data["coffee"]))
+        new_entry.method = BrewMethod.objects.get(pk=int(request.data["method"]))
         new_entry.grind_size = request.data["grindSize"]
-        new_entry.coffee_amount = request.data["coffeeAmount"]
+        new_entry.coffee_amount = int(request.data["coffeeAmount"])
         new_entry.title = request.data["title"]
         new_entry.date = datetime.date.today()
         new_entry.tasting_notes = request.data["tastingNotes"]
         new_entry.review = request.data["review"]
-        new_entry.rating = request.data["rating"]
+        new_entry.rating = int(request.data["rating"])
         new_entry.setup = request.data["setup"]
-        new_entry.water_temp = request.data["waterTemp"]
-        new_entry.water_volume = request.data["waterVolume"]
-        new_entry.private = request.data["private"]
+        new_entry.water_temp = int(request.data["waterTemp"])
+        new_entry.water_volume = int(request.data["waterVolume"])
+        new_entry.private = bool(request.data["private"])
         new_entry.block = False
         new_entry.recipe = False
         new_entry.recommend = False
@@ -45,7 +45,7 @@ class EntryView(ViewSet):
 
         new_entry.save()
 
-        serializer = EntrySerializer(
+        serializer = EntryDetailSerializer(
             new_entry, context={'request': request}
         )
 
@@ -60,7 +60,6 @@ class EntryView(ViewSet):
         brewer = Brewer.objects.get(user=user)
 
         entries = Entry.objects.all().order_by("date")
-        # .filter(private=False).filter(block=False)
 
         user_id = request.query_params.get('user_id', None)
         if user_id == str(user.id):
@@ -69,7 +68,7 @@ class EntryView(ViewSet):
             entries = entries.filter(private=False).filter(block=False)
 
 
-        serializer = EntrySerializer(
+        serializer = EntryListSerializer(
             entries, many=True, context={'request': request}
         )
         return Response(serializer.data)
@@ -79,24 +78,29 @@ class EntryView(ViewSet):
         user = request.auth.user
         brewer = Brewer.objects.get(user=user)
         entry = Entry.objects.get(pk=pk)
-        # entry.coffee = Coffee.objects.get(pk=entry.coffee_id)
-        # entry.brewer = user
-        # entry.method = BrewMethod.objects.get(pk=entry.method_id)
+        
+        
         try:
             # return a post if the user owns it
             if entry.brewer == brewer:
                 entry = entry
-
+                entry.edit_allowed = True
             # admin can see blocked posts but not private posts
             elif brewer.is_admin and entry.private == False:
                 entry = entry
-
+                entry.edit_allowed = False
             # any user can view public, unblocked posts
             else:
                 entry = Entry.objects.get(pk=pk, private=False, block=False)
-            
-            # steps 
-            serializer = EntrySerializer(
+                entry.edit_allowed = False
+
+            try:
+                FavoriteEntry.objects.get(entry=entry, brewer=brewer)
+                entry.favorite = True
+            except FavoriteEntry.DoesNotExist:
+                entry.favorite = False
+
+            serializer = EntryDetailSerializer(
                 entry, many=False, context={'request': request}
             )
             return Response(serializer.data)
@@ -112,18 +116,18 @@ class EntryView(ViewSet):
             brewer = Brewer.objects.get(user=request.auth.user)
             entry = Entry.objects.get(pk=pk, brewer=brewer)
 
-            entry.coffee = Coffee.objects.get(pk=request.data["coffee"])
-            entry.method = BrewMethod.objects.get(pk=request.data["method"])
+            entry.coffee = Coffee.objects.get(pk=int(request.data["coffee"]))
+            entry.method = BrewMethod.objects.get(pk=int(request.data["method"]))
             entry.grind_size = request.data["grindSize"]
-            entry.coffee_amount = request.data["coffeeAmount"]
+            entry.coffee_amount = int(request.data["coffeeAmount"])
             entry.title = request.data["title"]
             entry.tasting_notes = request.data["tastingNotes"]
             entry.review = request.data["review"]
-            entry.rating = request.data["rating"]
+            entry.rating = int(request.data["rating"])
             entry.setup = request.data["setup"]
-            entry.water_temp = request.data["waterTemp"]
-            entry.water_volume = request.data["waterVolume"]
-            entry.private = request.data["private"]
+            entry.water_temp = int(request.data["waterTemp"])
+            entry.water_volume = int(request.data["waterVolume"])
+            entry.private = bool(request.data["private"])
             
             try:
                 entry.clean_fields()
@@ -173,7 +177,7 @@ class EntryView(ViewSet):
                     favorite.entry = entry
                     favorite.brewer = brewer
                     favorite.save()
-
+                return Response({}, status=status.HTTP_201_CREATED)
             except Entry.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
@@ -188,8 +192,10 @@ class EntryView(ViewSet):
                         brewer=brewer, entry=entry
                 )
                 favorite.delete()
-
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
             except Entry.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except FavoriteEntry.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
@@ -216,6 +222,19 @@ class EntryView(ViewSet):
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(methods=['post'], detail=False)
+    def favorites(self, request):
+        """
+        Return a list of all entries that the requested user has favorited
+        """
+        brewer = Brewer.objects.get(user__username=request.data["username"], private=False)
+        favorites = brewer.favorites.all()
+
+        serializer = EntryListSerializer(
+            favorites, many=True, context={'request': request}
+        )
+        return Response(serializer.data)
 
     @action(methods=['post'], detail=True)
     def private(self, request, pk=None):
