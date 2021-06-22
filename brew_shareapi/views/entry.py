@@ -301,3 +301,15 @@ class EntryView(ViewSet):
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        if request.method=="DELETE":
+            try: 
+                step = EntryStep.objects.get(entry__brewer__user=request.auth.user, pk=int(request.data["id"]))
+                step.delete()
+
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+            except EntryStep.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
