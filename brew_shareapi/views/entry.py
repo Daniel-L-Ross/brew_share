@@ -280,3 +280,23 @@ class EntryView(ViewSet):
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        if request.method=="PUT":
+            try: 
+                step = EntryStep.objects.get(entry__brewer__user=request.auth.user, pk=request.data["stepId"])
+                step.descriptor = request.data["descriptor"]
+                step.instruction = request.data["instruction"]
+                step.seconds = request.data["seconds"]
+                try:
+                    image_data = base64_image_handler(request.data["stepImage"], step.instruction)
+                    step.step_image = image_data
+                except:
+                    pass
+                step.save()
+
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+            except EntryStep.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
