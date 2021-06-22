@@ -1,13 +1,14 @@
 """View module for handling request about entries"""
 import datetime
 from django.core.exceptions import ValidationError
+from django.db.models import Count, Q
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 from brew_shareapi.models import ( Entry, Brewer, Coffee,
                                     BrewMethod, FavoriteEntry, EntryReport,
-                                    EntryStep)
+                                    EntryStep, entry)
 from brew_shareapi.serializers import (EntryListSerializer, EntryDetailSerializer)
 from brew_shareapi.image_handler import base64_image_handler
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -58,16 +59,25 @@ class EntryView(ViewSet):
         Returns:
             Response -- JSON serialized list of entries
         """
-        entries = Entry.objects.filter(private=False, block=False).order_by("date")
+        entries = Entry.objects.annotate(
+            favorite=Count('favoriteentry', filter=Q(favoriteentry__entry_id=entry.id, favoriteentry__brewer__user=request.auth.user))
+        )
+        # entry_id=favoriteentry__entry_id,
+
+        # entries = Entry.objects.filter(private=False, block=False).order_by("date")
+        # usersFavorites = FavoriteEntry.objects.filter()
 
         username = self.request.query_params.get('username', None)
+        favorite = self.request.query_params.get('favorite', None)
+
         if username is not None:
             if username == request.auth.user.username:
                 brewer = Brewer.objects.get(user=request.auth.user)
                 entries = brewer.entries.all()
             else:
                 entries = entries.filter(brewer__user__username=username)
-
+        if favorite is not None:
+            entries.filter(favorite=True)
         serializer = EntryListSerializer(
             entries, many=True, context={'request': request}
         )
@@ -222,18 +232,6 @@ class EntryView(ViewSet):
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(methods=['post'], detail=False)
-    def favorites(self, request):
-        """
-        Return a list of all entries that the requested user has favorited
-        """
-        brewer = Brewer.objects.get(user__username=request.data["username"], private=False)
-        favorites = brewer.favorites.all()
-
-        serializer = EntryListSerializer(
-            favorites, many=True, context={'request': request}
-        )
-        return Response(serializer.data)
 
     @action(methods=['post'], detail=True)
     def private(self, request, pk=None):
