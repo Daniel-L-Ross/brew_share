@@ -60,8 +60,8 @@ class EntryView(ViewSet):
             Response -- JSON serialized list of entries
         """
         entries = Entry.objects.annotate(
-            favorite=Count('favoriteentry', filter=Q(favoriteentry__entry_id=entry.id, favoriteentry__brewer__user=request.auth.user))
-        )
+            favorite=Count('favoriteentry', filter=Q(favoriteentry__brewer__user=request.auth.user))
+        ).filter(private=False, block=False).order_by("date")
         # entry_id=favoriteentry__entry_id,
 
         # entries = Entry.objects.filter(private=False, block=False).order_by("date")
@@ -76,8 +76,14 @@ class EntryView(ViewSet):
                 entries = brewer.entries.all()
             else:
                 entries = entries.filter(brewer__user__username=username)
+
         if favorite is not None:
-            entries.filter(favorite=True)
+  
+            entries = entries.filter(favorite=1)
+            print("inside the if statement")
+        for entry in entries:
+            print(entry.favorite)
+            
         serializer = EntryListSerializer(
             entries, many=True, context={'request': request}
         )
