@@ -57,7 +57,7 @@ def register_user(request):
 
     # handle base64 image string for profile image
     image_data = base64_image_handler(req_body['profileImage'], new_user.id)
-
+    # TODO: make image optional with try catch or make mandatory on register form
     # save the brewer user extension
     brewer = Brewer.objects.create(
         bio=req_body['bio'],

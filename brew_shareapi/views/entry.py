@@ -6,8 +6,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 from brew_shareapi.models import ( Entry, Brewer, Coffee,
-                                    BrewMethod, FavoriteEntry, EntryReport)
+                                    BrewMethod, FavoriteEntry, EntryReport,
+                                    EntryStep)
 from brew_shareapi.serializers import (EntryListSerializer, EntryDetailSerializer)
+from brew_shareapi.image_handler import base64_image_handler
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class EntryView(ViewSet):
@@ -247,6 +249,67 @@ class EntryView(ViewSet):
                 entry.save()
                 return Response({}, status=status.HTTP_204_NO_CONTENT)
             except Entry.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(methods=['post', 'put', 'delete'], detail=True)
+    def steps(self, request, pk=None):
+        """
+        Handle creating, updating, and deleting steps for an entry
+        """
+        if request.method=="POST":
+            brewer = Brewer.objects.get(user=request.auth.user)
+            entry = Entry.objects.get(pk=pk, brewer=brewer)
+            try:
+                new_step = EntryStep()
+                new_step.entry = entry
+                new_step.descriptor = request.data["descriptor"]
+                new_step.instruction = request.data["instruction"]
+                new_step.seconds = request.data["seconds"]
+                try:
+                    image_data = base64_image_handler(request.data["stepImage"], new_step.instruction)
+                    new_step.step_image = image_data
+                except:
+                    new_step.step_image = None
+                
+                new_step.save()
+            
+                return Response(status=status.HTTP_201_CREATED)
+            except Entry.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+        if request.method=="PUT":
+            try: 
+                step = EntryStep.objects.get(entry__brewer__user=request.auth.user, pk=int(request.data["id"]))
+
+                step.descriptor = request.data["descriptor"]
+                step.instruction = request.data["instruction"]
+                step.seconds = request.data["seconds"]
+                try:
+                    image_data = base64_image_handler(request.data["stepImage"], step.instruction)
+                    step.step_image = image_data
+                except:
+                    pass
+                step.save()
+
+                return Response(status=status.HTTP_204_NO_CONTENT)
+
+            except EntryStep.DoesNotExist as ex:
+                return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
+            except Exception as ex:
+                return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+        if request.method=="DELETE":
+            try: 
+                step = EntryStep.objects.get(entry__brewer__user=request.auth.user, pk=int(request.data["id"]))
+                step.delete()
+
+                return Response({}, status=status.HTTP_204_NO_CONTENT)
+
+            except EntryStep.DoesNotExist as ex:
                 return Response({'message': ex.args[0]}, status=status/status.HTTP_404_NOT_FOUND)
             except Exception as ex:
                 return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
