@@ -283,7 +283,8 @@ class EntryView(ViewSet):
             
         if request.method=="PUT":
             try: 
-                step = EntryStep.objects.get(entry__brewer__user=request.auth.user, pk=request.data["stepId"])
+                step = EntryStep.objects.get(entry__brewer__user=request.auth.user, pk=int(request.data["id"]))
+
                 step.descriptor = request.data["descriptor"]
                 step.instruction = request.data["instruction"]
                 step.seconds = request.data["seconds"]
