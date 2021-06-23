@@ -2,8 +2,8 @@ from django.contrib import admin
 from .models import (BrewMethod, Brewer, Coffee,
                     EntryReport, EntryStep, Entry,
                     FavoriteEntry, RecipeReview, RecommendRecipe)
-# Register your models here.
 
+# models registered for admin portal
 admin.site.register(BrewMethod)
 admin.site.register(Brewer)
 admin.site.register(Coffee)
