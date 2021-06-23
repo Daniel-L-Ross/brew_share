@@ -13,7 +13,7 @@ brew install libtiff libjpeg webp little-cms2
 1. Clone this repository and change to the directory in the terminal.
 1. Run `pipenv shell`
 1. Run `pipenv install`
-1. Type this exact thing into the terminal to run the migrations and seed the database: `./seed_data.sh`
+1. Type this exact thing into the terminal to run the migrations and seed the database: `./seed.sh`. You may need to run `chmod +x seed.sh` to make the seed file executable.
 
 Now that your database is set up all you have to do is run the command:
 
@@ -21,7 +21,7 @@ Now that your database is set up all you have to do is run the command:
 python manage.py runserver
 ```
 
-## Bangazon ERD
+## brew_share ERD
 
 Open the [brew_share database diagram](https://dbdiagram.io/d/60d3569fdd6a5971481c4fb4) in the browser to view the tables and relationships for your database.
 
@@ -35,23 +35,18 @@ Open the [brew_share database diagram](https://dbdiagram.io/d/60d3569fdd6a597148
 1. Your should be prompted to import **brew_share API**.
 1. Click the Import button to complete the process.
 
-To test it out, expand the Profile sub-collection, double-click on Login and send the request. You should get a response back that looks like this.
+To test it out, expand the brewer profile sub-collection, double-click on Get single user detail and send the request. You should get a response back that looks like this.
 
 ```json
 {
-    "valid": true,
-    "token": "9ba45f09651c5b0c404f37a2d2572c026c146690",
-    "id": 5
+    "user": {
+        "first_name": "Dan",
+        "last_name": "Ross",
+        "username": "notdanross"
+    },
+    "bio": "holder of knowledge",
+    "profile_image": "http://localhost:8000/media/user_pics/2021/06/10/dan_suit_copy.png",
+    "current_coffee": "Humphrey's Street Adado",
+    "current_brew_method": "Pour over"
 }
 ```
-
-## Documentation
-
-To view browser-based documentation for the project, follow these steps.
-
-1. Run `./renderdocs.sh`
-1. `cd docs`
-1. Then start a simple web server like `http-server` or `serve`.
-1. In your web browser, go to the URL provided by your web server.
-
-![documentation site](./bangazon-docs.png)
