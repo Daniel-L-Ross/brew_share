@@ -1,13 +1,5 @@
 # brew_share API
 
-## Prerequisites
-
-### Mac OS
-
-```sh
-brew install libtiff libjpeg webp little-cms2
-```
-
 ## Setup
 
 1. Clone this repository and change to the directory in the terminal.
