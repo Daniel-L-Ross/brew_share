@@ -1,0 +1,1 @@
+web: gunicorn brew_share.wsgi --log-file -
