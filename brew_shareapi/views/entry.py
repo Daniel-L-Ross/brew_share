@@ -62,13 +62,12 @@ class EntryView(ViewSet):
         entries = Entry.objects.annotate(
             favorite=Count('favoriteentry', filter=Q(favoriteentry__brewer__user=request.auth.user))
         ).filter(private=False, block=False).order_by("date")
-        # entry_id=favoriteentry__entry_id,
-
-        # entries = Entry.objects.filter(private=False, block=False).order_by("date")
-        # usersFavorites = FavoriteEntry.objects.filter()
 
         username = self.request.query_params.get('username', None)
         favorite = self.request.query_params.get('favorite', None)
+        coffee = self.request.query_params.get('coffee', None)
+        method = self.request.query_params.get('method', None)
+        searchterm = self.request.query_params.get('searchterm', None)
 
         if username is not None:
             if username == request.auth.user.username:
@@ -79,7 +78,18 @@ class EntryView(ViewSet):
 
         if favorite is not None:
             entries = entries.filter(favorite=1)
-            
+
+        if coffee is not None:
+            entries = entries.filter(coffee_id=coffee)
+        
+        if method is not None:
+            entries = entries.filter(method_id=method)
+
+        if searchterm is not None:
+            entries = entries.filter(
+                Q(title__icontains=searchterm) | Q(setup__icontains=searchterm) | Q(tasting_notes__icontains=searchterm) |
+                Q(setup__icontains=searchterm))
+        
         serializer = EntryListSerializer(
             entries, many=True, context={'request': request}
         )
