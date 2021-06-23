@@ -8,7 +8,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from brew_shareapi.models import ( Entry, Brewer, Coffee,
                                     BrewMethod, FavoriteEntry, EntryReport,
-                                    EntryStep, entry)
+                                    EntryStep)
 from brew_shareapi.serializers import (EntryListSerializer, EntryDetailSerializer)
 from brew_shareapi.image_handler import base64_image_handler
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
@@ -86,6 +86,7 @@ class EntryView(ViewSet):
             entries = entries.filter(method_id=method)
 
         if searchterm is not None:
+            # search entry fields (title, setup, tasting notes, setup)
             entries = entries.filter(
                 Q(title__icontains=searchterm) | Q(setup__icontains=searchterm) | Q(tasting_notes__icontains=searchterm) |
                 Q(setup__icontains=searchterm))
