@@ -88,8 +88,7 @@ class EntryView(ViewSet):
         if searchterm is not None:
             # search entry fields (title, setup, tasting notes, setup)
             entries = entries.filter(
-                Q(title__icontains=searchterm) | Q(setup__icontains=searchterm) | Q(tasting_notes__icontains=searchterm) |
-                Q(setup__icontains=searchterm))
+                Q(title__icontains=searchterm) | Q(setup__icontains=searchterm) | Q(tasting_notes__icontains=searchterm))
         
         serializer = EntryListSerializer(
             entries, many=True, context={'request': request}
@@ -253,9 +252,9 @@ class EntryView(ViewSet):
         entries/pk/private
         """
         if request.method == "POST":
-            brewer = Brewer.objects.get(user=request.auth.user)
-            entry = Entry.objects.get(pk=pk, brewer=brewer)
             try:
+                brewer = Brewer.objects.get(user=request.auth.user)
+                entry = Entry.objects.get(pk=pk, brewer=brewer)
                 entry.private = not entry.private
                 entry.save()
                 return Response({}, status=status.HTTP_204_NO_CONTENT)
