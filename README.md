@@ -42,3 +42,9 @@ To test it out, expand the brewer profile sub-collection, double-click on Get si
     "current_brew_method": "Pour over"
 }
 ```
+## Acknowledgements
+
+Special thanks to my project manager [Jayna Leitze](https://github.com/JaynaLeitze) for her guidance and encouragement to help get this project completed on time.  
+
+## License
+Open Source project. 
