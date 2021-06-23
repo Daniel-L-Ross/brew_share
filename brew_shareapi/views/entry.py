@@ -78,11 +78,7 @@ class EntryView(ViewSet):
                 entries = entries.filter(brewer__user__username=username)
 
         if favorite is not None:
-  
             entries = entries.filter(favorite=1)
-            print("inside the if statement")
-        for entry in entries:
-            print(entry.favorite)
             
         serializer = EntryListSerializer(
             entries, many=True, context={'request': request}
