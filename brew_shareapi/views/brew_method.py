@@ -1,4 +1,5 @@
 """View module for handling requests on brew methods"""
+from brew_share import settings
 from django.core.exceptions import ValidationError
 from rest_framework.viewsets import ViewSet
 from rest_framework.response import Response
@@ -23,11 +24,15 @@ class BrewMethodView(ViewSet):
         new_method.website = request.data["website"]
         new_method.name = request.data["name"]
 
-        try:
-            image_data = base64_image_handler(request.data["brewMethodImage"], new_method.name)
+        if request.data['brewMethodImage']:
+            cloudinary.config(cloud_name=settings.CLOUDINARY_STORAGE['CLOUD_NAME'],
+                        api_key=int(settings.CLOUDINARY_STORAGE['API_KEY']),
+                        api_secret=settings.CLOUDINARY_STORAGE['API_SECRET'])
+
+
             upload_pic = cloudinary.uploader.upload(request.data["brewMethodImage"], folder='brewMethodsFolder', resource_type='image')
-            new_method.method_image = image_data
-        except:
+            new_method.method_image = upload_pic['url']
+        else:
             new_method.method_image = None
 
         try:
