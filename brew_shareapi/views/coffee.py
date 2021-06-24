@@ -7,6 +7,7 @@ from brew_shareapi.models import Coffee, Brewer
 from brew_shareapi.serializers import CoffeeListSerializer, CoffeeDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from brew_shareapi.image_handler import base64_image_handler
+import cloudinary
 
 
 class CoffeeView(ViewSet):

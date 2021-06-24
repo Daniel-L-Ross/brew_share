@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from brew_shareapi.models import Brewer
 from brew_shareapi.image_handler import base64_image_handler
+import cloudinary
 import json
 
 @csrf_exempt

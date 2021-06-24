@@ -14,12 +14,20 @@ import django_on_heroku
 import os
 from pathlib import Path
 import environ
+import cloudinary
+
 env = environ.Env()
 environ.Env.read_env()
 
 MEDIA_ROOT = 'media'
 MEDIA_URL = '/media/'
 
+# cloudinary storage for images
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'brewshare',
+    'API_KEY': env("CLOUDINARY_API_KEY"),
+    'API_SECRET': env('CLOUDINARY_SECRET_KEY'),
+}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -51,6 +59,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'corsheaders',
     'brew_shareapi',
+    'cloudinary'
 ]
 
 REST_FRAMEWORK = {

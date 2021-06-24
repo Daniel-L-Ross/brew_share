@@ -7,6 +7,7 @@ from brew_shareapi.models import BrewMethod, Brewer
 from brew_shareapi.serializers import MethodSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from brew_shareapi.image_handler import base64_image_handler
+import cloudinary
 
 class BrewMethodView(ViewSet):
     """Request handlers for Brew Methods on the brew_share app"""
@@ -24,6 +25,7 @@ class BrewMethodView(ViewSet):
 
         try:
             image_data = base64_image_handler(request.data["brewMethodImage"], new_method.name)
+            upload_pic = cloudinary.uploader.upload(request.data["brewMethodImage"], folder='brewMethodsFolder', resource_type='image')
             new_method.method_image = image_data
         except:
             new_method.method_image = None

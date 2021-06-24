@@ -6,6 +6,7 @@ from rest_framework import status
 from rest_framework.decorators import action
 from brew_shareapi.models import Brewer
 from brew_shareapi.serializers import BrewerListSerializer, BrewerDetailSerializer
+import cloudinary
 
 
 class BrewerView(ViewSet):

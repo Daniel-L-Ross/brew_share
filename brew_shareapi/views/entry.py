@@ -11,6 +11,7 @@ from brew_shareapi.models import ( Entry, Brewer, Coffee,
                                     EntryStep)
 from brew_shareapi.serializers import (EntryListSerializer, EntryDetailSerializer)
 from brew_shareapi.image_handler import base64_image_handler
+import cloudinary
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class EntryView(ViewSet):
