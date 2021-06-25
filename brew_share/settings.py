@@ -25,7 +25,7 @@ MEDIA_URL = '/media/'
 # cloudinary storage for images
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'brewshare',
-    'API_KEY': env("CLOUDINARY_API_KEY"),
+    'API_KEY': env('CLOUDINARY_API_KEY'),
     'API_SECRET': env('CLOUDINARY_SECRET_KEY'),
 }
 
