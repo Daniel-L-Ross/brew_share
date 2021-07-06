@@ -13,11 +13,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import django_on_heroku
 import os
 from pathlib import Path
-import environ
-import cloudinary
+# import environ
 
-env = environ.Env()
-environ.Env.read_env()
+# env = environ.Env()
+# environ.Env.read_env()
 
 MEDIA_ROOT = 'media'
 MEDIA_URL = '/media/'
@@ -25,8 +24,8 @@ MEDIA_URL = '/media/'
 # cloudinary storage for images
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'brewshare',
-    'API_KEY': env('CLOUDINARY_API_KEY'),
-    'API_SECRET': env('CLOUDINARY_SECRET_KEY'),
+    'API_KEY': os.getenv("CLOUDINARY_API_KEY"),
+    'API_SECRET': os.getenv("CLOUDINARY_SECRET_KEY"),
 }
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,7 +37,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
