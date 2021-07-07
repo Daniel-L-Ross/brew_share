@@ -7,3 +7,9 @@ class EntryStep(models.Model):
     descriptor = models.CharField(max_length=30)
     instruction = models.CharField(max_length=255)
     seconds = models.IntegerField()
+
+    # TODO: add logic to delete entry step photo when the corresponding entry is deleted.
+    # def delete(self):
+    #     if self.step_image:
+    #         pass
+    #     super(EntryStep, self).delete()

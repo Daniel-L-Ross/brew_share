@@ -110,6 +110,7 @@ class CoffeeView(ViewSet):
                 coffee = Coffee.objects.get(pk=pk)
             else:
                 coffee = Coffee.objects.get(pk=pk, brewer=brewer)
+            # TODO: delete image from cloudinary with cloudinary.uploader.destroy('public_id', resource+type = 'image')
             coffee.delete()
             return Response({}, status=status.HTTP_204_NO_CONTENT)
         except Coffee.DoesNotExist as ex:

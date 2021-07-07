@@ -279,6 +279,7 @@ class EntryView(ViewSet):
                 new_step.instruction = request.data["instruction"]
                 new_step.seconds = request.data["seconds"]
                 try:
+                    # TODO: add cloudinary logic
                     image_data = base64_image_handler(request.data["stepImage"], new_step.instruction)
                     new_step.step_image = image_data
                 except:
@@ -300,6 +301,7 @@ class EntryView(ViewSet):
                 step.instruction = request.data["instruction"]
                 step.seconds = request.data["seconds"]
                 try:
+                    # TODO: add cloudinary logic
                     image_data = base64_image_handler(request.data["stepImage"], step.instruction)
                     step.step_image = image_data
                 except:
@@ -316,6 +318,7 @@ class EntryView(ViewSet):
         if request.method=="DELETE":
             try: 
                 step = EntryStep.objects.get(entry__brewer__user=request.auth.user, pk=int(request.data["id"]))
+                # TODO: add cloudinary logic
                 step.delete()
 
                 return Response({}, status=status.HTTP_204_NO_CONTENT)

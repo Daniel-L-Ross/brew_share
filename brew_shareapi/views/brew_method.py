@@ -88,6 +88,7 @@ class BrewMethodView(ViewSet):
             method.website = request.data["website"]
             method.name = request.data["name"]
             try:
+                # TODO: add cloudinary upload with overwrite = true
                 image_data = base64_image_handler(request.data["brewMethodImage"], method.name)
                 method.method_image = image_data
             except:
@@ -113,6 +114,7 @@ class BrewMethodView(ViewSet):
                 method = BrewMethod.objects.get(pk=pk)
             else:
                 method = BrewMethod.objects.get(pk=pk, brewer=brewer)
+            # TODO: delete image from cloudinary with cloudinary.uploader.destroy('public_id', resource+type = 'image')
             method.delete()
             return Response({}, status=status.HTTP_204_NO_CONTENT)
         except BrewMethod.DoesNotExist as ex:
