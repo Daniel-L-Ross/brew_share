@@ -2,9 +2,8 @@ from django.db import models
 
 class Coffee(models.Model):
     brewer = models.ForeignKey('Brewer', on_delete=models.DO_NOTHING)
-    coffee_image = models.ImageField(
-        upload_to='coffee_pics/%Y/%m/%d', height_field=None,
-        width_field=None, max_length=None, null=True, blank=True)
+    coffee_image = models.URLField(blank=True)
+    cloudinary_image_id = models.CharField(max_length=255, blank=True)
     roaster = models.CharField(max_length=50)
     website = models.CharField(max_length=255)
     name = models.CharField(max_length=50)
