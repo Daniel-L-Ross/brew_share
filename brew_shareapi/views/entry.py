@@ -13,6 +13,10 @@ from brew_shareapi.serializers import (EntryListSerializer, EntryDetailSerialize
 from brew_shareapi.image_handler import base64_image_handler
 import cloudinary
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+import cloudinary
+import environ
+env = environ.Env()
+environ.Env.read_env()
 
 class EntryView(ViewSet):
     """Request handlers for Entries on the brew_share app"""
@@ -278,13 +282,20 @@ class EntryView(ViewSet):
                 new_step.descriptor = request.data["descriptor"]
                 new_step.instruction = request.data["instruction"]
                 new_step.seconds = request.data["seconds"]
-                try:
-                    # TODO: add cloudinary logic
-                    image_data = base64_image_handler(request.data["stepImage"], new_step.instruction)
-                    new_step.step_image = image_data
-                except:
+
+                if request.data['stepImage']:
+                        cloudinary.config(cloud_name = 'brewshare',
+                            api_key = env("CLOUDINARY_API_KEY"),
+                            api_secret = env("CLOUDINARY_SECRET_KEY"))
+                        upload_pic = cloudinary.uploader.upload(request.data["stepImage"], folder='stepsFolder')
+                        new_step.step_image = upload_pic['url']
+                        new_step.cloudinary_image_id = upload_pic['public_id']
+                else:
                     new_step.step_image = None
-                
+                try:
+                    new_step.clean_fields()
+                except ValidationError as ex:
+                    return Response({'message': ex.args[0]}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
                 new_step.save()
             
                 return Response(status=status.HTTP_201_CREATED)
