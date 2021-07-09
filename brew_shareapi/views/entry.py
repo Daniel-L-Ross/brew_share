@@ -291,7 +291,7 @@ class EntryView(ViewSet):
                         new_step.step_image = upload_pic['url']
                         new_step.cloudinary_image_id = upload_pic['public_id']
                 else:
-                    new_step.step_image = None
+                    new_step.step_image = ""
                 try:
                     new_step.clean_fields()
                 except ValidationError as ex:

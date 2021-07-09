@@ -39,7 +39,7 @@ class BrewMethodView(ViewSet):
             upload_pic = cloudinary.uploader.upload(request.data["brewMethodImage"], folder='brewMethodsFolder')
             new_method.method_image = upload_pic['url']
         else:
-            new_method.method_image = None
+            new_method.method_image = ""
 
         try:
             new_method.clean_fields()
