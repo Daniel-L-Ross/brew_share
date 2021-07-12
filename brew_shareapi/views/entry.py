@@ -172,8 +172,9 @@ class EntryView(ViewSet):
         """Handle DELETE requests for entries"""
         try:
             entry = Entry.objects.select_related('brewer').get(pk=pk, brewer__user=request.auth.user)
+            for step in entry.steps:
+                step.delete()
             entry.delete()
-
             return Response({}, status=status.HTTP_204_NO_CONTENT)
 
         except Entry.DoesNotExist as ex:
