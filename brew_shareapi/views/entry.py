@@ -10,13 +10,9 @@ from brew_shareapi.models import ( Entry, Brewer, Coffee,
                                     BrewMethod, FavoriteEntry, EntryReport,
                                     EntryStep)
 from brew_shareapi.serializers import (EntryListSerializer, EntryDetailSerializer)
-from brew_shareapi.image_handler import base64_image_handler
-import cloudinary
+from brew_shareapi.image_handler import upload_image
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-import cloudinary
-import environ
-env = environ.Env()
-environ.Env.read_env()
+
 
 class EntryView(ViewSet):
     """Request handlers for Entries on the brew_share app"""
@@ -284,11 +280,8 @@ class EntryView(ViewSet):
                 new_step.instruction = request.data["instruction"]
                 new_step.seconds = request.data["seconds"]
 
-                if request.data['stepImage']:
-                        cloudinary.config(cloud_name = 'brewshare',
-                            api_key = env("CLOUDINARY_API_KEY"),
-                            api_secret = env("CLOUDINARY_SECRET_KEY"))
-                        upload_pic = cloudinary.uploader.upload(request.data["stepImage"], folder='stepsFolder')
+                if request.data['stepImage']:                            
+                        upload_pic = upload_image(request.data['stepImage'], "stepsFolder")
                         new_step.step_image = upload_pic['url']
                         new_step.cloudinary_image_id = upload_pic['public_id']
                 else:

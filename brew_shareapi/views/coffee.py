@@ -6,8 +6,7 @@ from rest_framework import status
 from brew_shareapi.models import Coffee, Brewer
 from brew_shareapi.serializers import CoffeeListSerializer, CoffeeDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from brew_shareapi.image_handler import base64_image_handler
-import cloudinary
+from brew_shareapi.image_handler import upload_image
 
 
 class CoffeeView(ViewSet):
@@ -31,8 +30,9 @@ class CoffeeView(ViewSet):
         new_coffee.tasting_notes = request.data["tastingNotes"]
         
         try:
-            image_data = base64_image_handler(request.data["coffeeImage"], new_coffee.name)
-            new_coffee.coffee_image = image_data
+            # image_data = base64_image_handler(request.data["coffeeImage"], new_coffee.name)
+            # new_coffee.coffee_image = image_data
+            pass
         except:
             new_coffee.coffee_image = None
         try:

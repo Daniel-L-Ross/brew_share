@@ -4,7 +4,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from brew_shareapi.models import Brewer
-from brew_shareapi.image_handler import base64_image_handler
 import cloudinary
 import json
 
@@ -59,7 +58,8 @@ def register_user(request):
     # handle base64 image string for profile image
     # TODO: add cloudinary image upload
     try:
-        image_data = base64_image_handler(req_body['profileImage'], new_user.id)
+        # image_data = base64_image_handler(req_body['profileImage'], new_user.id)
+        pass
     except:
         image_data = None
 

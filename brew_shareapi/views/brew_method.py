@@ -7,7 +7,6 @@ from rest_framework import status
 from brew_shareapi.models import BrewMethod, Brewer
 from brew_shareapi.serializers import MethodSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from brew_shareapi.image_handler import base64_image_handler
 import cloudinary
 import environ
 env = environ.Env()
@@ -31,9 +30,6 @@ class BrewMethodView(ViewSet):
             cloudinary.config(cloud_name = 'brewshare',
                         api_key = env("CLOUDINARY_API_KEY"),
                         api_secret = env("CLOUDINARY_SECRET_KEY"))
-            # cloudinary.config(cloud_name = 'brewshare',
-            #             api_key = os.getenv("CLOUDINARY_API_KEY"),
-            #             api_secret = os.getenv("CLOUDINARY_SECRET_KEY"))
 
 
             upload_pic = cloudinary.uploader.upload(request.data["brewMethodImage"], folder='brewMethodsFolder')
@@ -89,8 +85,9 @@ class BrewMethodView(ViewSet):
             method.name = request.data["name"]
             try:
                 # TODO: add cloudinary upload with overwrite = true
-                image_data = base64_image_handler(request.data["brewMethodImage"], method.name)
-                method.method_image = image_data
+                # image_data = base64_image_handler(request.data["brewMethodImage"], method.name)
+                # method.method_image = image_data
+                pass
             except:
                 pass
 
