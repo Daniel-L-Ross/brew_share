@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from brew_shareapi.models import Brewer
-import cloudinary
+from brew_shareapi.image_handler import upload_image
 import json
 
 @csrf_exempt
@@ -55,24 +55,23 @@ def register_user(request):
         last_name=req_body['last_name']
     )
 
-    # handle base64 image string for profile image
-    # TODO: add cloudinary image upload
-    try:
-        # image_data = base64_image_handler(req_body['profileImage'], new_user.id)
-        pass
-    except:
-        image_data = None
-
-    # save the brewer user extension
+    # create the brewer user extension
     brewer = Brewer.objects.create(
         bio=req_body['bio'],
         user=new_user,
-        profile_image=image_data,
         is_admin = False, 
         current_coffee = req_body['currentCoffee'],
         current_brew_method = req_body['currentBrewMethod'],
         private = False
     )
+
+    if req_body['profileImage']:
+        upload_pic = upload_image(req_body['profileImage'], "usersFolder")
+        brewer.profile_image = upload_pic['url']
+        brewer.cloudinary_image_id = upload_pic['public_id']
+    else:
+        brewer.profile_image = ""
+
 
     # Commit the user to the database by saving it
     brewer.save()

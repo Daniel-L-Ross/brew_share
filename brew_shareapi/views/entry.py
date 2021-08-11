@@ -281,9 +281,9 @@ class EntryView(ViewSet):
                 new_step.seconds = request.data["seconds"]
 
                 if request.data['stepImage']:                            
-                        upload_pic = upload_image(request.data['stepImage'], "stepsFolder")
-                        new_step.step_image = upload_pic['url']
-                        new_step.cloudinary_image_id = upload_pic['public_id']
+                    upload_pic = upload_image(request.data['stepImage'], "stepsFolder")
+                    new_step.step_image = upload_pic['url']
+                    new_step.cloudinary_image_id = upload_pic['public_id']
                 else:
                     new_step.step_image = ""
                 try:
@@ -307,8 +307,9 @@ class EntryView(ViewSet):
                 step.seconds = request.data["seconds"]
                 try:
                     # TODO: add cloudinary logic
-                    image_data = base64_image_handler(request.data["stepImage"], step.instruction)
-                    step.step_image = image_data
+                    # image_data = base64_image_handler(request.data["stepImage"], step.instruction)
+                    # step.step_image = image_data
+                    pass
                 except:
                     pass
                 step.save()
