@@ -10,7 +10,7 @@ from brew_shareapi.models import ( Entry, Brewer, Coffee,
                                     BrewMethod, FavoriteEntry, EntryReport,
                                     EntryStep)
 from brew_shareapi.serializers import (EntryListSerializer, EntryDetailSerializer)
-from brew_shareapi.image_handler import upload_image
+from brew_shareapi.image_handler import cloudinary_upload
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 
@@ -281,7 +281,7 @@ class EntryView(ViewSet):
                 new_step.seconds = request.data["seconds"]
 
                 if request.data['stepImage']:                            
-                    upload_pic = upload_image(request.data['stepImage'], "stepsFolder")
+                    upload_pic = cloudinary_upload(request.data['stepImage'], "stepsFolder")
                     new_step.step_image = upload_pic['url']
                     new_step.cloudinary_image_id = upload_pic['public_id']
                 else:

@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.models import User
 from rest_framework.authtoken.models import Token
 from brew_shareapi.models import Brewer
-from brew_shareapi.image_handler import upload_image
+from brew_shareapi.image_handler import cloudinary_upload
 import json
 
 @csrf_exempt
@@ -66,7 +66,7 @@ def register_user(request):
     )
 
     if req_body['profileImage']:
-        upload_pic = upload_image(req_body['profileImage'], "usersFolder")
+        upload_pic = cloudinary_upload(req_body['profileImage'], "usersFolder")
         brewer.profile_image = upload_pic['url']
         brewer.cloudinary_image_id = upload_pic['public_id']
     else:

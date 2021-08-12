@@ -6,7 +6,7 @@ from rest_framework import status
 from brew_shareapi.models import Coffee, Brewer
 from brew_shareapi.serializers import CoffeeListSerializer, CoffeeDetailSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from brew_shareapi.image_handler import upload_image
+from brew_shareapi.image_handler import cloudinary_upload
 
 
 class CoffeeView(ViewSet):
@@ -29,12 +29,12 @@ class CoffeeView(ViewSet):
         new_coffee.recommended_method = request.data["recommendedMethod"]
         new_coffee.tasting_notes = request.data["tastingNotes"]
         
-        try:
-            # image_data = base64_image_handler(request.data["coffeeImage"], new_coffee.name)
-            # new_coffee.coffee_image = image_data
-            pass
-        except:
-            new_coffee.coffee_image = None
+        if request.data['coffeeImage']:                            
+            upload_pic = cloudinary_upload(request.data['coffeeImage'], "coffeeFolder")
+            new_coffee.coffee_image = upload_pic['url']
+            new_coffee.cloudinary_image_id = upload_pic['public_id']
+        else:
+            new_coffee.coffee_image = ""
         try:
             new_coffee.clean_fields()
         except ValidationError as ex:
