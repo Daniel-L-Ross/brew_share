@@ -6,11 +6,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from brew_shareapi.models import BrewMethod, Brewer
 from brew_shareapi.serializers import MethodSerializer
+from brew_shareapi.image_handler import cloudinary_upload
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-import cloudinary
-import environ
-env = environ.Env()
-environ.Env.read_env()
 
 class BrewMethodView(ViewSet):
     """Request handlers for Brew Methods on the brew_share app"""
@@ -27,13 +24,10 @@ class BrewMethodView(ViewSet):
         new_method.name = request.data["name"]
 
         if request.data['brewMethodImage']:
-            cloudinary.config(cloud_name = 'brewshare',
-                        api_key = env("CLOUDINARY_API_KEY"),
-                        api_secret = env("CLOUDINARY_SECRET_KEY"))
+            upload_pic = cloudinary_upload(request.data['brewMethodImage'], 'brewMethodFolder')
 
-
-            upload_pic = cloudinary.uploader.upload(request.data["brewMethodImage"], folder='brewMethodsFolder')
             new_method.method_image = upload_pic['url']
+            new_method.cloudinary_image_id = upload_pic['public_id']
         else:
             new_method.method_image = ""
 
